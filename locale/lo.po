@@ -2,542 +2,468 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=utf-8\n"
 
+msgctxt "error:account.move.line.pay:"
+msgid "The Line \"%(line)s\" is blocked."
+msgstr ""
+
 msgctxt "error:account.payment.process:"
 msgid "The Payment \"%(payment)s\" overpays the Line \"%(line)s\"."
-msgstr ""
+msgstr "ການຊໍາລະເງິນ \"%(payment)s\" ຈ່າຍເກີນ ລາຍການ \"% (line)s\"."
 
 msgctxt "error:account.payment:"
 msgid "Payment \"%s\" must be in draft before deletion."
-msgstr ""
+msgstr "ການຊໍາລະເງິນ \"%s\" ຕ້ອງປັບໃຫ້ເປັນສະບັບຮ່າງກ່ອນຈຶ່ງລຶບໄດ້."
 
 msgctxt "field:account.configuration,payment_group_sequence:"
 msgid "Payment Group Sequence"
-msgstr ""
+msgstr "ລໍຳດັບໝວດການຈ່າຍ"
 
-#, fuzzy
 msgctxt "field:account.move.line,payment_amount:"
 msgid "Payment Amount"
-msgstr "Платена сума"
+msgstr "ມູນຄ່າການຈ່າຍ"
+
+msgctxt "field:account.move.line,payment_blocked:"
+msgid "Blocked"
+msgstr ""
 
 msgctxt "field:account.move.line,payment_kind:"
 msgid "Payment Kind"
-msgstr ""
+msgstr "ຊະນິດການຈ່າຍ"
 
-#, fuzzy
 msgctxt "field:account.move.line,payments:"
 msgid "Payments"
-msgstr "Плащане"
+msgstr "ການຊໍາລະເງິນ"
 
 #, fuzzy
-msgctxt "field:account.move.line.pay.start,date:"
-msgid "Date"
-msgstr "Дата"
+msgctxt "field:account.move.line.pay.ask_journal,company:"
+msgid "Company"
+msgstr "ສຳນັກງານ/ຫ້ອງການ"
 
 #, fuzzy
-msgctxt "field:account.move.line.pay.start,id:"
+msgctxt "field:account.move.line.pay.ask_journal,currency:"
+msgid "Currency"
+msgstr "ສະກຸນເງິນ"
+
+#, fuzzy
+msgctxt "field:account.move.line.pay.ask_journal,id:"
 msgid "ID"
-msgstr "ID"
+msgstr "ເລກລຳດັບ"
 
 #, fuzzy
-msgctxt "field:account.move.line.pay.start,journal:"
+msgctxt "field:account.move.line.pay.ask_journal,journal:"
 msgid "Journal"
-msgstr "Дневник"
+msgstr "ບັນຊີປະຈໍາວັນ"
 
 #, fuzzy
+msgctxt "field:account.move.line.pay.ask_journal,journals:"
+msgid "Journals"
+msgstr "ບັນຊີປະຈໍາວັນ"
+
 msgctxt "field:account.payment,amount:"
 msgid "Amount"
-msgstr "Сума"
+msgstr "ມູນຄ່າ"
 
-#, fuzzy
 msgctxt "field:account.payment,company:"
 msgid "Company"
-msgstr "Фирма"
+msgstr "ສຳນັກງານ/ຫ້ອງການ"
 
-#, fuzzy
 msgctxt "field:account.payment,create_date:"
 msgid "Create Date"
-msgstr "Създадено на"
+msgstr "ວັນທີສ້າງ"
 
-#, fuzzy
 msgctxt "field:account.payment,create_uid:"
 msgid "Create User"
-msgstr "Създадено от"
+msgstr "ຜູ້ສ້າງ"
 
-#, fuzzy
 msgctxt "field:account.payment,currency:"
 msgid "Currency"
-msgstr "Управление на валути"
+msgstr "ສະກຸນເງິນ"
 
-#, fuzzy
 msgctxt "field:account.payment,currency_digits:"
 msgid "Currency Digits"
-msgstr "Цифри за валута"
+msgstr "ເລກເສດສະຸກນເງິນ"
 
-#, fuzzy
 msgctxt "field:account.payment,date:"
 msgid "Date"
-msgstr "Дата"
+msgstr "ວັນທີ"
 
-#, fuzzy
 msgctxt "field:account.payment,description:"
 msgid "Description"
-msgstr "Описание"
+msgstr "ຄຳອະທິບາຍ"
 
-#, fuzzy
 msgctxt "field:account.payment,group:"
 msgid "Group"
-msgstr "Група"
+msgstr "ໝວດ"
 
-#, fuzzy
 msgctxt "field:account.payment,id:"
 msgid "ID"
-msgstr "ID"
+msgstr "ເລກລຳດັບ"
 
-#, fuzzy
 msgctxt "field:account.payment,journal:"
 msgid "Journal"
-msgstr "Дневник"
+msgstr "ບັນຊີປະຈໍາວັນ"
 
-#, fuzzy
 msgctxt "field:account.payment,kind:"
 msgid "Kind"
-msgstr "Вид"
+msgstr "ຊະນິດ"
 
-#, fuzzy
 msgctxt "field:account.payment,line:"
 msgid "Line"
-msgstr "Ред"
+msgstr "ລາຍການ"
 
-#, fuzzy
 msgctxt "field:account.payment,party:"
 msgid "Party"
-msgstr "Управление на партньор"
+msgstr "ພາກສ່ວນ"
 
-#, fuzzy
 msgctxt "field:account.payment,rec_name:"
 msgid "Name"
-msgstr "Условие за плащане"
+msgstr "ຊື່"
 
-#, fuzzy
 msgctxt "field:account.payment,state:"
 msgid "State"
-msgstr "Щат"
+msgstr "ສະຖານະ"
 
-#, fuzzy
 msgctxt "field:account.payment,write_date:"
 msgid "Write Date"
-msgstr "Променено на"
+msgstr "ວັນທີບັນທຶກ"
 
-#, fuzzy
 msgctxt "field:account.payment,write_uid:"
 msgid "Write User"
-msgstr "Променено от"
+msgstr "ຜູ້ບັນທຶກ"
 
-#, fuzzy
 msgctxt "field:account.payment.group,company:"
 msgid "Company"
-msgstr "Фирма"
+msgstr "ສຳນັກງານ/ຫ້ອງການ"
 
-#, fuzzy
 msgctxt "field:account.payment.group,create_date:"
 msgid "Create Date"
-msgstr "Създадено на"
+msgstr "ວັນທີສ້າງ"
 
-#, fuzzy
 msgctxt "field:account.payment.group,create_uid:"
 msgid "Create User"
-msgstr "Създадено от"
+msgstr "ຜູ້ສ້າງ"
 
-#, fuzzy
 msgctxt "field:account.payment.group,id:"
 msgid "ID"
-msgstr "ID"
+msgstr "ເລກລຳດັບ"
 
-#, fuzzy
 msgctxt "field:account.payment.group,journal:"
 msgid "Journal"
-msgstr "Дневник"
+msgstr "ບັນຊີປະຈໍາວັນ"
 
-#, fuzzy
 msgctxt "field:account.payment.group,kind:"
 msgid "Kind"
-msgstr "Вид"
+msgstr "ຊະນິດ"
 
 msgctxt "field:account.payment.group,number:"
 msgid "Number"
-msgstr ""
+msgstr "ເລກທີ"
 
-#, fuzzy
 msgctxt "field:account.payment.group,payments:"
 msgid "Payments"
-msgstr "Плащане"
+msgstr "ການຊໍາລະເງິນ"
 
-#, fuzzy
 msgctxt "field:account.payment.group,rec_name:"
 msgid "Name"
-msgstr "Условие за плащане"
+msgstr "ຊື່"
 
-#, fuzzy
 msgctxt "field:account.payment.group,write_date:"
 msgid "Write Date"
-msgstr "Променено на"
+msgstr "ວັນທີບັນທຶກ"
 
-#, fuzzy
 msgctxt "field:account.payment.group,write_uid:"
 msgid "Write User"
-msgstr "Променено от"
+msgstr "ຜູ້ບັນທຶກ"
 
-#, fuzzy
 msgctxt "field:account.payment.journal,company:"
 msgid "Company"
-msgstr "Фирма"
+msgstr "ສຳນັກງານ/ຫ້ອງການ"
 
-#, fuzzy
 msgctxt "field:account.payment.journal,create_date:"
 msgid "Create Date"
-msgstr "Създадено на"
+msgstr "ວັນທີສ້າງ"
 
-#, fuzzy
 msgctxt "field:account.payment.journal,create_uid:"
 msgid "Create User"
-msgstr "Създадено от"
+msgstr "ຜູ້ສ້າງ"
 
-#, fuzzy
 msgctxt "field:account.payment.journal,currency:"
 msgid "Currency"
-msgstr "Управление на валути"
+msgstr "ສະກຸນເງິນ"
 
-#, fuzzy
 msgctxt "field:account.payment.journal,id:"
 msgid "ID"
-msgstr "ID"
+msgstr "ເລກລໍາດັບ"
 
-#, fuzzy
 msgctxt "field:account.payment.journal,name:"
 msgid "Name"
-msgstr "Условие за плащане"
+msgstr "ຊື່"
 
 msgctxt "field:account.payment.journal,process_method:"
 msgid "Process Method"
-msgstr ""
+msgstr "ວິທີດຳເນີນການ"
 
-#, fuzzy
 msgctxt "field:account.payment.journal,rec_name:"
 msgid "Name"
-msgstr "Условие за плащане"
+msgstr "ຊື່"
 
-#, fuzzy
 msgctxt "field:account.payment.journal,write_date:"
 msgid "Write Date"
-msgstr "Променено на"
+msgstr "ວັນທີບັນທຶກ"
 
-#, fuzzy
 msgctxt "field:account.payment.journal,write_uid:"
 msgid "Write User"
-msgstr "Променено от"
+msgstr "ຜູ້ບັນທຶກ"
 
-#, fuzzy
 msgctxt "field:account.payment.process.start,id:"
 msgid "ID"
-msgstr "ID"
-
-msgctxt "model:account.move.line.pay.start,name:"
-msgid "Pay Line"
-msgstr ""
+msgstr "ເລກລຳດັບ"
 
 #, fuzzy
+msgctxt "model:account.move.line.pay.ask_journal,name:"
+msgid "Pay Line"
+msgstr "ລາຍການຈ່າຍ"
+
 msgctxt "model:account.payment,name:"
 msgid "Payment"
-msgstr "Плащане"
+msgstr "ການຈ່າຍ"
 
 msgctxt "model:account.payment.group,name:"
 msgid "Payment Group"
-msgstr ""
+msgstr "ໝວດການຈ່າຍ"
 
 msgctxt "model:account.payment.journal,name:"
 msgid "Payment Journal"
-msgstr ""
+msgstr "ບັນຊີລາຍຈ່າຍປະຈຳວັນ"
 
 msgctxt "model:account.payment.process.start,name:"
 msgid "Process Payment"
-msgstr ""
+msgstr "ດຳເນີນການຊໍາລະ"
 
-#, fuzzy
 msgctxt "model:ir.action,name:act_move_line_form"
 msgid "Lines to Pay"
-msgstr "Редове за плащане"
+msgstr "ລາຍການທີ່ຈະຈ່າຍ"
 
 msgctxt "model:ir.action,name:act_pay_line"
 msgid "Pay Lines"
-msgstr ""
+msgstr "ລາຍການຈ່າຍ"
 
-#, fuzzy
 msgctxt "model:ir.action,name:act_payment_form"
 msgid "Payments"
-msgstr "Плащане"
+msgstr "ການຊໍາລະເງິນ"
 
-#, fuzzy
 msgctxt "model:ir.action,name:act_payment_form_group_open"
 msgid "Payments"
-msgstr "Плащане"
+msgstr "ການຊໍາລະເງິນ"
 
-#, fuzzy
 msgctxt "model:ir.action,name:act_payment_form_line_relate"
 msgid "Payments"
-msgstr "Плащане"
+msgstr "ການຊໍາລະເງິນ"
 
 msgctxt "model:ir.action,name:act_payment_group_form"
 msgid "Payment Groups"
-msgstr ""
+msgstr "ໝວດການຈ່າຍ"
 
 msgctxt "model:ir.action,name:act_payment_journal_form"
 msgid "Payment Journals"
-msgstr ""
+msgstr "ບັນຊີລາຍຈ່າຍປະຈຳວັນ"
 
 msgctxt "model:ir.action,name:act_process_payments"
 msgid "Process Payments"
-msgstr ""
+msgstr "ດຳເນີນການຊໍາລະ"
 
-#, fuzzy
 msgctxt ""
 "model:ir.action.act_window.domain,name:act_move_line_form_domain_payable"
 msgid "Payable"
-msgstr "Разходен"
+msgstr "ຕ້ອງຈ່າຍ"
 
-#, fuzzy
 msgctxt ""
 "model:ir.action.act_window.domain,name:act_move_line_form_domain_receivable"
 msgid "Receivable"
-msgstr "За получаване"
+msgstr "ຕ້ອງຮັບ"
 
 msgctxt "model:ir.action.act_window.domain,name:act_payment_form_domain_all"
 msgid "All"
-msgstr ""
+msgstr "ທັງໝົດ"
 
 msgctxt ""
 "model:ir.action.act_window.domain,name:act_payment_form_domain_approved"
 msgid "Approved"
-msgstr ""
+msgstr "ອະນຸມັດແລ້ວ"
 
-#, fuzzy
 msgctxt "model:ir.action.act_window.domain,name:act_payment_form_domain_draft"
 msgid "Draft"
-msgstr "Проект"
+msgstr "ຮ່າງກຽມ"
 
 msgctxt ""
 "model:ir.action.act_window.domain,name:act_payment_form_domain_failed"
 msgid "Failed"
-msgstr ""
+msgstr "ລົ້ມເຫຼວ"
 
-#, fuzzy
 msgctxt ""
 "model:ir.action.act_window.domain,name:act_payment_form_domain_processing"
 msgid "Processing"
-msgstr "Обработване"
+msgstr "ກຳລັງດຳເນີນການ"
 
 msgctxt ""
 "model:ir.action.act_window.domain,name:act_payment_form_domain_suceeded"
 msgid "Succeeded"
-msgstr ""
+msgstr "ສຳເລັດແລ້ວ"
 
 msgctxt "model:ir.sequence,name:sequence_account_payment_group"
 msgid "Default Account Payment Group"
-msgstr ""
+msgstr "ໝວດບັນຊີລາຍຈ່າຍຫຼັກ"
 
 msgctxt "model:ir.sequence.type,name:sequence_type_account_payment_group"
 msgid "Account Payment Group"
-msgstr ""
+msgstr "ໝວດບັນຊີລາຍຈ່າຍ"
 
-#, fuzzy
 msgctxt "model:ir.ui.menu,name:menu_move_line_form"
 msgid "Lines to Pay"
-msgstr "Редове за плащане"
+msgstr "ລາຍການທີ່ຈະຈ່າຍ"
 
-#, fuzzy
 msgctxt "model:ir.ui.menu,name:menu_payment_configuration"
 msgid "Payments"
-msgstr "Плащане"
+msgstr "ການຊໍາລະເງິນ"
 
-#, fuzzy
 msgctxt "model:ir.ui.menu,name:menu_payment_form"
 msgid "Payments"
-msgstr "Плащане"
+msgstr "ການຊໍາລະເງິນ"
 
 msgctxt "model:ir.ui.menu,name:menu_payment_group_form"
 msgid "Payment Groups"
-msgstr ""
+msgstr "ໝວດການຈ່າຍ"
 
 msgctxt "model:ir.ui.menu,name:menu_payment_journal_form"
 msgid "Payment Journals"
-msgstr ""
+msgstr "ບັນຊີລາຍຈ່າຍປະຈຳວັນ"
 
-#, fuzzy
 msgctxt "model:ir.ui.menu,name:menu_payments"
 msgid "Payments"
-msgstr "Плащане"
+msgstr "ການຊໍາລະເງິນ"
 
-#, fuzzy
 msgctxt "model:res.group,name:group_payment"
 msgid "Payment"
-msgstr "Плащане"
+msgstr "ການຈ່າຍ"
+
+msgctxt "model:res.group,name:group_payment_approval"
+msgid "Payment Approval"
+msgstr ""
 
 msgctxt "selection:account.move.line,payment_kind:"
 msgid ""
 msgstr ""
 
-#, fuzzy
 msgctxt "selection:account.move.line,payment_kind:"
 msgid "Payable"
-msgstr "Разходен"
+msgstr "ຕ້ອງຈ່າຍ"
 
-#, fuzzy
 msgctxt "selection:account.move.line,payment_kind:"
 msgid "Receivable"
-msgstr "За получаване"
+msgstr "ຕ້ອງຮັບ"
 
-#, fuzzy
 msgctxt "selection:account.payment,kind:"
 msgid "Payable"
-msgstr "Разходен"
+msgstr "ຕ້ອງຈ່າຍ"
 
-#, fuzzy
 msgctxt "selection:account.payment,kind:"
 msgid "Receivable"
-msgstr "За получаване"
+msgstr "ຕ້ອງຮັບ"
 
 msgctxt "selection:account.payment,state:"
 msgid "Approved"
-msgstr ""
+msgstr "ອະນຸມັດແລ້ວ"
 
-#, fuzzy
 msgctxt "selection:account.payment,state:"
 msgid "Draft"
-msgstr "Проект"
+msgstr "ຮ່າງກຽມ"
 
 msgctxt "selection:account.payment,state:"
 msgid "Failed"
-msgstr ""
+msgstr "ລົ້ມເຫຼວ"
 
-#, fuzzy
 msgctxt "selection:account.payment,state:"
 msgid "Processing"
-msgstr "Обработване"
+msgstr "ກຳລັງດຳເນີນການ"
 
 msgctxt "selection:account.payment,state:"
 msgid "Succeeded"
-msgstr ""
+msgstr "ສຳເລັດແລ້ວ"
 
-#, fuzzy
 msgctxt "selection:account.payment.group,kind:"
 msgid "Payable"
-msgstr "Разходен"
+msgstr "ຕ້ອງຈ່າຍ"
 
-#, fuzzy
 msgctxt "selection:account.payment.group,kind:"
 msgid "Receivable"
-msgstr "За получаване"
+msgstr "ຕ້ອງຮັບ"
 
-#, fuzzy
 msgctxt "selection:account.payment.journal,process_method:"
 msgid "Manual"
-msgstr "Ръчно"
+msgstr "ດຳເນີນການດ້ວຍມື"
 
 msgctxt "view:account.configuration:"
 msgid "Group Sequence"
-msgstr ""
+msgstr "ລຳດັບໝວດ"
 
-#, fuzzy
 msgctxt "view:account.configuration:"
 msgid "Payment"
-msgstr "Плащане"
-
-msgctxt "view:account.move.line.pay.start:"
-msgid "Pay Line"
-msgstr ""
+msgstr "ການຈ່າຍ"
 
 msgctxt "view:account.move.line:"
-msgid "Account Move Lines"
+msgid "Block"
 msgstr ""
 
 msgctxt "view:account.move.line:"
 msgid "Pay Lines"
-msgstr ""
+msgstr "ລາຍການຈ່າຍ"
 
-msgctxt "view:account.payment.group:"
-msgid "Payment Group"
-msgstr ""
-
-msgctxt "view:account.payment.group:"
-msgid "Payment Groups"
-msgstr ""
-
-msgctxt "view:account.payment.journal:"
-msgid "Payment Journal"
-msgstr ""
-
-msgctxt "view:account.payment.journal:"
-msgid "Payment Journals"
-msgstr ""
-
-msgctxt "view:account.payment.process.start:"
-msgid "Process Payments"
+msgctxt "view:account.move.line:"
+msgid "Unblock"
 msgstr ""
 
 msgctxt "view:account.payment.process.start:"
 msgid "Process Payments?"
-msgstr ""
+msgstr "ດຳເນີນການຊໍາລະບໍ່?"
 
 msgctxt "view:account.payment:"
 msgid "Approve"
-msgstr ""
+msgstr "ອະນຸມັດ"
 
-#, fuzzy
 msgctxt "view:account.payment:"
 msgid "Description"
-msgstr "Описание"
+msgstr "ຄຳອະທິບາຍ"
 
-#, fuzzy
 msgctxt "view:account.payment:"
 msgid "Draft"
-msgstr "Проект"
+msgstr "ຮ່າງກຽມ"
 
 msgctxt "view:account.payment:"
 msgid "Fail"
-msgstr ""
+msgstr "ລົ້ມເຫຼວ"
 
 msgctxt "view:account.payment:"
 msgid "Other Info"
-msgstr ""
-
-#, fuzzy
-msgctxt "view:account.payment:"
-msgid "Payment"
-msgstr "Плащане"
-
-#, fuzzy
-msgctxt "view:account.payment:"
-msgid "Payments"
-msgstr "Плащане"
+msgstr "ຂໍ້ມູນອື່ນໆ"
 
 msgctxt "view:account.payment:"
 msgid "Succeed"
-msgstr ""
+msgstr "ສຳເລັດແລ້ວ"
 
 #, fuzzy
-msgctxt "wizard_button:account.move.line.pay,start,end:"
+msgctxt "wizard_button:account.move.line.pay,ask_journal,end:"
 msgid "Cancel"
-msgstr "Отказване"
-
-msgctxt "wizard_button:account.move.line.pay,start,pay:"
-msgid "Pay"
-msgstr ""
+msgstr "ຍົກເລີກ"
 
 #, fuzzy
+msgctxt "wizard_button:account.move.line.pay,ask_journal,start:"
+msgid "Pay"
+msgstr "ຈ່າຍ"
+
 msgctxt "wizard_button:account.payment.process,start,end:"
 msgid "Cancel"
-msgstr "Отказване"
+msgstr "ຍົກເລີກ"
 
-#, fuzzy
 msgctxt "wizard_button:account.payment.process,start,process:"
 msgid "Process"
-msgstr "Обработване"
+msgstr "ດຳເນີນການ"

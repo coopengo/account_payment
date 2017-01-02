@@ -2,6 +2,10 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=utf-8\n"
 
+msgctxt "error:account.move.line.pay:"
+msgid "The Line \"%(line)s\" is blocked."
+msgstr ""
+
 msgctxt "error:account.payment.process:"
 msgid "The Payment \"%(payment)s\" overpays the Line \"%(line)s\"."
 msgstr ""
@@ -18,38 +22,45 @@ msgctxt "field:account.move.line,payment_amount:"
 msgid "Payment Amount"
 msgstr ""
 
+msgctxt "field:account.move.line,payment_blocked:"
+msgid "Blocked"
+msgstr ""
+
 msgctxt "field:account.move.line,payment_kind:"
 msgid "Payment Kind"
 msgstr ""
 
-#, fuzzy
 msgctxt "field:account.move.line,payments:"
 msgid "Payments"
-msgstr "Betaling"
+msgstr ""
 
-#, fuzzy
-msgctxt "field:account.move.line.pay.start,date:"
-msgid "Date"
-msgstr "Vervaldatum"
+msgctxt "field:account.move.line.pay.ask_journal,company:"
+msgid "Company"
+msgstr ""
 
-msgctxt "field:account.move.line.pay.start,id:"
+msgctxt "field:account.move.line.pay.ask_journal,currency:"
+msgid "Currency"
+msgstr ""
+
+msgctxt "field:account.move.line.pay.ask_journal,id:"
 msgid "ID"
 msgstr ""
 
-#, fuzzy
-msgctxt "field:account.move.line.pay.start,journal:"
+msgctxt "field:account.move.line.pay.ask_journal,journal:"
 msgid "Journal"
-msgstr "Dagboek"
+msgstr ""
 
-#, fuzzy
+msgctxt "field:account.move.line.pay.ask_journal,journals:"
+msgid "Journals"
+msgstr ""
+
 msgctxt "field:account.payment,amount:"
 msgid "Amount"
-msgstr "Bedrag"
+msgstr ""
 
-#, fuzzy
 msgctxt "field:account.payment,company:"
 msgid "Company"
-msgstr "Bedrijf"
+msgstr ""
 
 msgctxt "field:account.payment,create_date:"
 msgid "Create Date"
@@ -59,64 +70,54 @@ msgctxt "field:account.payment,create_uid:"
 msgid "Create User"
 msgstr ""
 
-#, fuzzy
 msgctxt "field:account.payment,currency:"
 msgid "Currency"
-msgstr "Valuta"
+msgstr ""
 
-#, fuzzy
 msgctxt "field:account.payment,currency_digits:"
 msgid "Currency Digits"
-msgstr "Valuta decimalen"
+msgstr ""
 
-#, fuzzy
 msgctxt "field:account.payment,date:"
 msgid "Date"
-msgstr "Vervaldatum"
+msgstr ""
 
-#, fuzzy
 msgctxt "field:account.payment,description:"
 msgid "Description"
-msgstr "Specificatie"
+msgstr ""
 
-#, fuzzy
 msgctxt "field:account.payment,group:"
 msgid "Group"
-msgstr "Groep"
+msgstr ""
 
 msgctxt "field:account.payment,id:"
 msgid "ID"
 msgstr ""
 
-#, fuzzy
 msgctxt "field:account.payment,journal:"
 msgid "Journal"
-msgstr "Dagboek"
+msgstr ""
 
-#, fuzzy
 msgctxt "field:account.payment,kind:"
 msgid "Kind"
-msgstr "Soort"
+msgstr ""
 
-#, fuzzy
 msgctxt "field:account.payment,line:"
 msgid "Line"
-msgstr "Regel"
+msgstr ""
 
-#, fuzzy
 msgctxt "field:account.payment,party:"
 msgid "Party"
-msgstr "Relaties"
+msgstr ""
 
 #, fuzzy
 msgctxt "field:account.payment,rec_name:"
 msgid "Name"
-msgstr "Naam bijlage"
+msgstr "Namu"
 
-#, fuzzy
 msgctxt "field:account.payment,state:"
 msgid "State"
-msgstr "Status"
+msgstr ""
 
 msgctxt "field:account.payment,write_date:"
 msgid "Write Date"
@@ -126,10 +127,9 @@ msgctxt "field:account.payment,write_uid:"
 msgid "Write User"
 msgstr ""
 
-#, fuzzy
 msgctxt "field:account.payment.group,company:"
 msgid "Company"
-msgstr "Bedrijf"
+msgstr ""
 
 msgctxt "field:account.payment.group,create_date:"
 msgid "Create Date"
@@ -143,29 +143,26 @@ msgctxt "field:account.payment.group,id:"
 msgid "ID"
 msgstr ""
 
-#, fuzzy
 msgctxt "field:account.payment.group,journal:"
 msgid "Journal"
-msgstr "Dagboek"
+msgstr ""
 
-#, fuzzy
 msgctxt "field:account.payment.group,kind:"
 msgid "Kind"
-msgstr "Soort"
+msgstr ""
 
 msgctxt "field:account.payment.group,number:"
 msgid "Number"
 msgstr ""
 
-#, fuzzy
 msgctxt "field:account.payment.group,payments:"
 msgid "Payments"
-msgstr "Betaling"
+msgstr ""
 
 #, fuzzy
 msgctxt "field:account.payment.group,rec_name:"
 msgid "Name"
-msgstr "Naam bijlage"
+msgstr "Namu"
 
 msgctxt "field:account.payment.group,write_date:"
 msgid "Write Date"
@@ -175,10 +172,9 @@ msgctxt "field:account.payment.group,write_uid:"
 msgid "Write User"
 msgstr ""
 
-#, fuzzy
 msgctxt "field:account.payment.journal,company:"
 msgid "Company"
-msgstr "Bedrijf"
+msgstr ""
 
 msgctxt "field:account.payment.journal,create_date:"
 msgid "Create Date"
@@ -188,10 +184,9 @@ msgctxt "field:account.payment.journal,create_uid:"
 msgid "Create User"
 msgstr ""
 
-#, fuzzy
 msgctxt "field:account.payment.journal,currency:"
 msgid "Currency"
-msgstr "Valuta"
+msgstr ""
 
 msgctxt "field:account.payment.journal,id:"
 msgid "ID"
@@ -200,7 +195,7 @@ msgstr ""
 #, fuzzy
 msgctxt "field:account.payment.journal,name:"
 msgid "Name"
-msgstr "Naam bijlage"
+msgstr "Namu"
 
 msgctxt "field:account.payment.journal,process_method:"
 msgid "Process Method"
@@ -209,7 +204,7 @@ msgstr ""
 #, fuzzy
 msgctxt "field:account.payment.journal,rec_name:"
 msgid "Name"
-msgstr "Naam bijlage"
+msgstr "Namu"
 
 msgctxt "field:account.payment.journal,write_date:"
 msgid "Write Date"
@@ -223,14 +218,13 @@ msgctxt "field:account.payment.process.start,id:"
 msgid "ID"
 msgstr ""
 
-msgctxt "model:account.move.line.pay.start,name:"
+msgctxt "model:account.move.line.pay.ask_journal,name:"
 msgid "Pay Line"
 msgstr ""
 
-#, fuzzy
 msgctxt "model:account.payment,name:"
 msgid "Payment"
-msgstr "Betaling"
+msgstr ""
 
 msgctxt "model:account.payment.group,name:"
 msgid "Payment Group"
@@ -244,29 +238,25 @@ msgctxt "model:account.payment.process.start,name:"
 msgid "Process Payment"
 msgstr ""
 
-#, fuzzy
 msgctxt "model:ir.action,name:act_move_line_form"
 msgid "Lines to Pay"
-msgstr "Te betalen boekingen"
+msgstr ""
 
 msgctxt "model:ir.action,name:act_pay_line"
 msgid "Pay Lines"
 msgstr ""
 
-#, fuzzy
 msgctxt "model:ir.action,name:act_payment_form"
 msgid "Payments"
-msgstr "Betaling"
+msgstr ""
 
-#, fuzzy
 msgctxt "model:ir.action,name:act_payment_form_group_open"
 msgid "Payments"
-msgstr "Betaling"
+msgstr ""
 
-#, fuzzy
 msgctxt "model:ir.action,name:act_payment_form_line_relate"
 msgid "Payments"
-msgstr "Betaling"
+msgstr ""
 
 msgctxt "model:ir.action,name:act_payment_group_form"
 msgid "Payment Groups"
@@ -280,17 +270,15 @@ msgctxt "model:ir.action,name:act_process_payments"
 msgid "Process Payments"
 msgstr ""
 
-#, fuzzy
 msgctxt ""
 "model:ir.action.act_window.domain,name:act_move_line_form_domain_payable"
 msgid "Payable"
-msgstr "Te betalen"
+msgstr ""
 
-#, fuzzy
 msgctxt ""
 "model:ir.action.act_window.domain,name:act_move_line_form_domain_receivable"
 msgid "Receivable"
-msgstr "Te ontvangen"
+msgstr ""
 
 msgctxt "model:ir.action.act_window.domain,name:act_payment_form_domain_all"
 msgid "All"
@@ -301,21 +289,19 @@ msgctxt ""
 msgid "Approved"
 msgstr ""
 
-#, fuzzy
 msgctxt "model:ir.action.act_window.domain,name:act_payment_form_domain_draft"
 msgid "Draft"
-msgstr "Concept"
+msgstr ""
 
 msgctxt ""
 "model:ir.action.act_window.domain,name:act_payment_form_domain_failed"
 msgid "Failed"
 msgstr ""
 
-#, fuzzy
 msgctxt ""
 "model:ir.action.act_window.domain,name:act_payment_form_domain_processing"
 msgid "Processing"
-msgstr "Verwerking"
+msgstr ""
 
 msgctxt ""
 "model:ir.action.act_window.domain,name:act_payment_form_domain_suceeded"
@@ -330,20 +316,17 @@ msgctxt "model:ir.sequence.type,name:sequence_type_account_payment_group"
 msgid "Account Payment Group"
 msgstr ""
 
-#, fuzzy
 msgctxt "model:ir.ui.menu,name:menu_move_line_form"
 msgid "Lines to Pay"
-msgstr "Te betalen boekingen"
+msgstr ""
 
-#, fuzzy
 msgctxt "model:ir.ui.menu,name:menu_payment_configuration"
 msgid "Payments"
-msgstr "Betaling"
+msgstr ""
 
-#, fuzzy
 msgctxt "model:ir.ui.menu,name:menu_payment_form"
 msgid "Payments"
-msgstr "Betaling"
+msgstr ""
 
 msgctxt "model:ir.ui.menu,name:menu_payment_group_form"
 msgid "Payment Groups"
@@ -353,116 +336,88 @@ msgctxt "model:ir.ui.menu,name:menu_payment_journal_form"
 msgid "Payment Journals"
 msgstr ""
 
-#, fuzzy
 msgctxt "model:ir.ui.menu,name:menu_payments"
 msgid "Payments"
-msgstr "Betaling"
+msgstr ""
 
-#, fuzzy
 msgctxt "model:res.group,name:group_payment"
 msgid "Payment"
-msgstr "Betaling"
+msgstr ""
+
+msgctxt "model:res.group,name:group_payment_approval"
+msgid "Payment Approval"
+msgstr ""
 
 msgctxt "selection:account.move.line,payment_kind:"
 msgid ""
 msgstr ""
 
-#, fuzzy
 msgctxt "selection:account.move.line,payment_kind:"
 msgid "Payable"
-msgstr "Te betalen"
+msgstr ""
 
-#, fuzzy
 msgctxt "selection:account.move.line,payment_kind:"
 msgid "Receivable"
-msgstr "Te ontvangen"
+msgstr ""
 
-#, fuzzy
 msgctxt "selection:account.payment,kind:"
 msgid "Payable"
-msgstr "Te betalen"
+msgstr ""
 
-#, fuzzy
 msgctxt "selection:account.payment,kind:"
 msgid "Receivable"
-msgstr "Te ontvangen"
+msgstr ""
 
 msgctxt "selection:account.payment,state:"
 msgid "Approved"
 msgstr ""
 
-#, fuzzy
 msgctxt "selection:account.payment,state:"
 msgid "Draft"
-msgstr "Concept"
+msgstr ""
 
 msgctxt "selection:account.payment,state:"
 msgid "Failed"
 msgstr ""
 
-#, fuzzy
 msgctxt "selection:account.payment,state:"
 msgid "Processing"
-msgstr "Verwerking"
+msgstr ""
 
 msgctxt "selection:account.payment,state:"
 msgid "Succeeded"
 msgstr ""
 
-#, fuzzy
 msgctxt "selection:account.payment.group,kind:"
 msgid "Payable"
-msgstr "Te betalen"
+msgstr ""
 
-#, fuzzy
 msgctxt "selection:account.payment.group,kind:"
 msgid "Receivable"
-msgstr "Te ontvangen"
+msgstr ""
 
-#, fuzzy
 msgctxt "selection:account.payment.journal,process_method:"
 msgid "Manual"
-msgstr "Handmatig"
+msgstr ""
 
 msgctxt "view:account.configuration:"
 msgid "Group Sequence"
 msgstr ""
 
-#, fuzzy
 msgctxt "view:account.configuration:"
 msgid "Payment"
-msgstr "Betaling"
-
-msgctxt "view:account.move.line.pay.start:"
-msgid "Pay Line"
 msgstr ""
 
 msgctxt "view:account.move.line:"
-msgid "Account Move Lines"
+msgid "Block"
 msgstr ""
 
 msgctxt "view:account.move.line:"
 msgid "Pay Lines"
 msgstr ""
 
-msgctxt "view:account.payment.group:"
-msgid "Payment Group"
-msgstr ""
-
-msgctxt "view:account.payment.group:"
-msgid "Payment Groups"
-msgstr ""
-
-msgctxt "view:account.payment.journal:"
-msgid "Payment Journal"
-msgstr ""
-
-msgctxt "view:account.payment.journal:"
-msgid "Payment Journals"
-msgstr ""
-
-msgctxt "view:account.payment.process.start:"
-msgid "Process Payments"
+msgctxt "view:account.move.line:"
+msgid "Unblock"
 msgstr ""
 
 msgctxt "view:account.payment.process.start:"
@@ -473,15 +428,13 @@ msgctxt "view:account.payment:"
 msgid "Approve"
 msgstr ""
 
-#, fuzzy
 msgctxt "view:account.payment:"
 msgid "Description"
-msgstr "Specificatie"
+msgstr ""
 
-#, fuzzy
 msgctxt "view:account.payment:"
 msgid "Draft"
-msgstr "Concept"
+msgstr ""
 
 msgctxt "view:account.payment:"
 msgid "Fail"
@@ -491,33 +444,21 @@ msgctxt "view:account.payment:"
 msgid "Other Info"
 msgstr ""
 
-#, fuzzy
-msgctxt "view:account.payment:"
-msgid "Payment"
-msgstr "Betaling"
-
-#, fuzzy
-msgctxt "view:account.payment:"
-msgid "Payments"
-msgstr "Betaling"
-
 msgctxt "view:account.payment:"
 msgid "Succeed"
 msgstr ""
 
-#, fuzzy
-msgctxt "wizard_button:account.move.line.pay,start,end:"
+msgctxt "wizard_button:account.move.line.pay,ask_journal,end:"
 msgid "Cancel"
-msgstr "Annuleren"
+msgstr ""
 
-msgctxt "wizard_button:account.move.line.pay,start,pay:"
+msgctxt "wizard_button:account.move.line.pay,ask_journal,start:"
 msgid "Pay"
 msgstr ""
 
-#, fuzzy
 msgctxt "wizard_button:account.payment.process,start,end:"
 msgid "Cancel"
-msgstr "Annuleren"
+msgstr ""
 
 msgctxt "wizard_button:account.payment.process,start,process:"
 msgid "Process"

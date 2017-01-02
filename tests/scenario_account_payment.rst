@@ -5,24 +5,16 @@ Payment Scenario
 Imports::
     >>> import datetime
     >>> from decimal import Decimal
-    >>> from proteus import config, Model, Wizard
+    >>> from proteus import Model, Wizard
+    >>> from trytond.tests.tools import activate_modules
     >>> from trytond.modules.company.tests.tools import create_company, \
     ...     get_company
     >>> from trytond.modules.account.tests.tools import create_fiscalyear, \
     ...     create_chart, get_accounts
 
-Create database::
-
-    >>> config = config.set_trytond()
-    >>> config.pool.test = True
-
 Install account_payment::
 
-    >>> Module = Model.get('ir.module')
-    >>> account_payment_module, = Module.find(
-    ...     [('name', '=', 'account_payment')])
-    >>> account_payment_module.click('install')
-    >>> Wizard('ir.module.install_upgrade').execute('upgrade')
+    >>> config = activate_modules('account_payment')
 
 Create company::
 
@@ -74,7 +66,7 @@ Partially pay line::
     >>> line, = [l for l in move.lines if l.account == payable]
     >>> pay_line = Wizard('account.move.line.pay', [line])
     >>> pay_line.form.journal = payment_journal
-    >>> pay_line.execute('pay')
+    >>> pay_line.execute('start')
     >>> payment, = Payment.find()
     >>> payment.party == supplier
     True
@@ -97,7 +89,7 @@ Partially fail to pay the remaining::
 
     >>> pay_line = Wizard('account.move.line.pay', [line])
     >>> pay_line.form.journal = payment_journal
-    >>> pay_line.execute('pay')
+    >>> pay_line.execute('start')
     >>> payment, = Payment.find([('state', '=', 'draft')])
     >>> payment.amount
     Decimal('30.00')
@@ -114,3 +106,27 @@ Partially fail to pay the remaining::
     >>> line.reload()
     >>> line.payment_amount
     Decimal('30.00')
+
+Pay line and block it after::
+
+    >>> move, = move.duplicate()
+    >>> move.click('post')
+    >>> line, = [l for l in move.lines if l.account == payable]
+    >>> pay_line = Wizard('account.move.line.pay', [line])
+    >>> pay_line.form.journal = payment_journal
+    >>> pay_line.execute('start')
+    >>> len(line.payments)
+    1
+
+    >>> line.click('payment_block')
+    >>> len(line.payments)
+    0
+
+Try to pay blocked line::
+
+    >>> pay_line = Wizard('account.move.line.pay', [line])
+    >>> pay_line.form.journal = payment_journal
+    >>> pay_line.execute('start')  # doctest: +IGNORE_EXCEPTION_DETAIL
+    Traceback (most recent call last):
+        ...
+    UserWarning: ...

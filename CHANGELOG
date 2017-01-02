@@ -1,5 +1,9 @@
-Version 4.0.1 - 2016-05-11
+Version 4.2.0 - 2016-11-28
 * Bug fixes (see mercurial logs for details)
+* Allow to block payment of line
+* Ask payment journal for each currency
+* Decrease amount to pay of invoice
+* Add group Payment Approval
 
 Version 4.0.0 - 2016-05-02
 * Bug fixes (see mercurial logs for details)

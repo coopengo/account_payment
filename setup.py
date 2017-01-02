@@ -54,6 +54,8 @@ for dep in info.get('depends', []):
 requires.append(get_require_version('trytond'))
 
 tests_require = [get_require_version('proteus')]
+for dep in ['account_invoice']:
+    tests_require.append(get_require_version('trytond_%s' % dep))
 dependency_links = []
 if minor_version % 2:
     # Add development index for testing with proteus
@@ -96,6 +98,7 @@ setup(name=name,
         'Natural Language :: German',
         'Natural Language :: Hungarian',
         'Natural Language :: Italian',
+        'Natural Language :: Polish',
         'Natural Language :: Portuguese (Brazilian)',
         'Natural Language :: Russian',
         'Natural Language :: Slovenian',
