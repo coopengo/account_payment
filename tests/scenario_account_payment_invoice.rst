@@ -69,12 +69,13 @@ Create invoice::
     >>> invoice.amount_to_pay
     Decimal('100.00')
     >>> line_to_pay, = invoice.lines_to_pay
+    >>> bool(line_to_pay.payment_direct_debit)
+    False
 
 Partially pay line::
 
     >>> Payment = Model.get('account.payment')
     >>> pay_line = Wizard('account.move.line.pay', [line_to_pay])
-    >>> pay_line.form.journal = payment_journal
     >>> pay_line.execute('start')
     >>> payment, = Payment.find()
     >>> payment.amount = Decimal('20')
@@ -107,3 +108,44 @@ Check amount to pay::
     >>> invoice.amount_to_pay
     Decimal('100.00')
 
+Create multiple valid payments for one line::
+
+    >>> line_to_pay, = invoice.lines_to_pay
+    >>> pay_line = Wizard('account.move.line.pay', [line_to_pay])
+    >>> pay_line.execute('start')
+    >>> pay_line = Wizard('account.move.line.pay', [line_to_pay])
+    >>> pay_line.execute('start')
+    >>> payments = Payment.find([('state', '=', 'draft')])
+    >>> for payment in payments:
+    ...     payment.amount = Decimal('30')
+    >>> Payment.click(payments, 'approve')
+
+Check amount to pay::
+
+    >>> invoice.reload()
+    >>> invoice.amount_to_pay
+    Decimal('40.00')
+
+Set party as direct debit::
+
+    >>> party.payment_direct_debit = True
+    >>> party.save()
+
+Create invoice::
+
+    >>> Invoice = Model.get('account.invoice')
+    >>> invoice = Invoice()
+    >>> invoice.party = party
+    >>> bool(invoice.payment_direct_debit)
+    True
+    >>> line = invoice.lines.new()
+    >>> line.description = 'Description'
+    >>> line.account = revenue
+    >>> line.quantity = 1
+    >>> line.unit_price = Decimal('50')
+    >>> invoice.click('post')
+    >>> invoice.state
+    u'posted'
+    >>> line_to_pay, = invoice.lines_to_pay
+    >>> bool(line_to_pay.payment_direct_debit)
+    True
