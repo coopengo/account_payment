@@ -351,10 +351,14 @@ class ProcessPayment(Wizard):
         payments = sorted(payments, key=self._group_payment_key)
         for key, grouped_payments in groupby(payments,
                 key=self._group_payment_key):
-            def group():
-                group = self._new_group(dict(key))
-                group.save()
-                groups.append(group)
+            def group(grp=None):
+                if not grp:
+                    group = self._new_group(dict(key))
+                    group.save()
+                    groups.append(group)
+                else:
+                    groups.append(grp)
+                    return grp
                 return group
             Payment.process(list(grouped_payments), group)
 
