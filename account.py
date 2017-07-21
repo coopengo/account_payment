@@ -7,16 +7,20 @@ from sql.aggregate import Sum
 from sql.conditionals import Case, Coalesce
 from sql.functions import Abs
 
+from trytond import backend
 from trytond.pool import Pool, PoolMeta
-from trytond.model import ModelView, fields
+from trytond.model import ModelSQL, ModelView, fields
 from trytond.pyson import Eval, If, Bool
 from trytond.wizard import (Wizard, StateView, StateAction, StateTransition,
     Button)
 from trytond.transaction import Transaction
+from trytond.tools.multivalue import migrate_property
+from trytond.modules.company.model import CompanyValueMixin
 
 from .payment import KINDS
 
-__all__ = ['MoveLine', 'PayLine', 'PayLineAskJournal', 'Configuration',
+__all__ = ['MoveLine', 'PayLine', 'PayLineAskJournal',
+    'Configuration', 'ConfigurationPaymentGroupSequence',
     'Invoice']
 
 
@@ -45,6 +49,14 @@ class MoveLine:
                 ] + KINDS, 'Payment Kind'), 'get_payment_kind',
         searcher='search_payment_kind')
     payment_blocked = fields.Boolean('Blocked', readonly=True)
+    payment_direct_debit = fields.Boolean("Direct Debit",
+        states={
+            'invisible': ~(
+                (Eval('payment_kind') == 'payable')
+                & ((Eval('credit', 0) > 0) | (Eval('debit', 0) < 0))),
+            },
+        depends=['payment_kind', 'debit', 'credit'],
+        help="Check if the line will be paid by direct debit.")
 
     @classmethod
     def __setup__(cls):
@@ -60,7 +72,12 @@ class MoveLine:
                     'invisible': ~Eval('payment_blocked', False),
                     },
                 })
-        cls._check_modify_exclude.add('payment_blocked')
+        cls._check_modify_exclude.update(
+            ['payment_blocked', 'payment_direct_debit'])
+
+    @classmethod
+    def default_payment_direct_debit(cls):
+        return False
 
     @classmethod
     def get_payment_amount(cls, lines, name):
@@ -229,8 +246,17 @@ class PayLine(Wizard):
             return 'pay'
 
     def default_ask_journal(self, fields):
+        pool = Pool()
+        Journal = pool.get('account.payment.journal')
         values = {}
         company, currency = self._missing_journal()[:2]
+        journals = Journal.search([
+                ('company', '=', company),
+                ('currency', '=', currency),
+                ])
+        if len(journals) == 1:
+            journal, = journals
+            values['journal'] = journal.id
         values['company'] = company.id
         values['currency'] = currency.id
         values['journals'] = [j.id for j in self._get_journals().itervalues()]
@@ -280,17 +306,86 @@ class PayLine(Wizard):
 class Configuration:
     __metaclass__ = PoolMeta
     __name__ = 'account.configuration'
-    payment_group_sequence = fields.Property(fields.Many2One('ir.sequence',
-            'Payment Group Sequence', domain=[
+    payment_group_sequence = fields.MultiValue(fields.Many2One(
+            'ir.sequence', 'Payment Group Sequence', required=True,
+            domain=[
                 ('company', 'in',
                     [Eval('context', {}).get('company', -1), None]),
                 ('code', '=', 'account.payment.group'),
-                ], required=True))
+                ]))
+
+    @classmethod
+    def default_payment_group_sequence(cls, **pattern):
+        return cls.multivalue_model(
+            'payment_group_sequence').default_payment_group_sequence()
+
+
+class ConfigurationPaymentGroupSequence(ModelSQL, CompanyValueMixin):
+    "Account Configuration Payment Group Sequence"
+    __name__ = 'account.configuration.payment_group_sequence'
+    payment_group_sequence = fields.Many2One(
+        'ir.sequence', "Payment Group Sequence", required=True,
+        domain=[
+            ('company', 'in', [Eval('company', -1), None]),
+            ('code', '=', 'account.payment.group'),
+            ],
+        depends=['company'])
+
+    @classmethod
+    def __register__(cls, module_name):
+        TableHandler = backend.get('TableHandler')
+        exist = TableHandler.table_exist(cls._table)
+
+        super(ConfigurationPaymentGroupSequence, cls).__register__(module_name)
+
+        if not exist:
+            cls._migrate_property([], [], [])
+
+    @classmethod
+    def _migrate_property(cls, field_names, value_names, fields):
+        field_names.append('payment_group_sequence')
+        value_names.append('payment_group_sequence')
+        fields.append('company')
+        migrate_property(
+            'account.configuration', field_names, cls, value_names,
+            fields=fields)
+
+    @classmethod
+    def default_payment_group_sequence(cls):
+        pool = Pool()
+        ModelData = pool.get('ir.model.data')
+        try:
+            return ModelData.get_id(
+                'account_payment', 'sequence_account_payment_group')
+        except KeyError:
+            return None
 
 
 class Invoice:
     __metaclass__ = PoolMeta
     __name__ = 'account.invoice'
+
+    payment_direct_debit = fields.Boolean("Direct Debit",
+        states={
+            'invisible': Eval('type') != 'in',
+            },
+        depends=['type'],
+        help="Check if the invoice is paid by direct debit.")
+
+    @classmethod
+    def default_payment_direct_debit(cls):
+        return False
+
+    @fields.depends('party')
+    def on_change_party(self):
+        super(Invoice, self).on_change_party()
+        if self.party:
+            self.payment_direct_debit = self.party.payment_direct_debit
+
+    def _get_move_line(self, date, amount):
+        line = super(Invoice, self)._get_move_line(date, amount)
+        line.payment_direct_debit = self.payment_direct_debit
+        return line
 
     @classmethod
     def get_amount_to_pay(cls, invoices, name):

@@ -3,7 +3,7 @@
 from trytond.pool import Pool
 from .payment import *
 from .account import *
-from .party import PartyReplace
+from . import party
 
 
 def register():
@@ -15,10 +15,13 @@ def register():
         ProcessPaymentStart,
         PayLineAskJournal,
         Configuration,
+        ConfigurationPaymentGroupSequence,
         Invoice,
+        party.Party,
+        party.PartyPaymentDirectDebit,
         module='account_payment', type_='model')
     Pool.register(
         ProcessPayment,
         PayLine,
-        PartyReplace,
+        party.PartyReplace,
         module='account_payment', type_='wizard')
