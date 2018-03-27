@@ -24,4 +24,5 @@ def register():
         ProcessPayment,
         PayLine,
         party.PartyReplace,
+        party.PartyErase,
         module='account_payment', type_='wizard')
