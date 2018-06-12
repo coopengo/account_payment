@@ -14,6 +14,14 @@ msgctxt "error:account.payment:"
 msgid "Payment \"%s\" must be in draft before deletion."
 msgstr "Zahlung \"%s\" kann nur in Status Entwurf gelöscht werden."
 
+msgctxt "error:party.erase:"
+msgid ""
+"The party \"%(party)s\" can not be erased because he has pending payments "
+"for the company \"%(company)s\"."
+msgstr ""
+"Die Partei \"%(party)s\" kann nicht gelöscht werden, da sie offene Zahlungen"
+" für das Unternehmen \"%(company)s\" hat."
+
 msgctxt "field:account.configuration,payment_group_sequence:"
 msgid "Payment Group Sequence"
 msgstr "Nummernkreis Zahlungsgruppe"
@@ -41,7 +49,7 @@ msgstr "Nummernkreis Zahlungsgruppe"
 
 msgctxt "field:account.configuration.payment_group_sequence,rec_name:"
 msgid "Record Name"
-msgstr ""
+msgstr "Bezeichnung des Datensatzes"
 
 msgctxt "field:account.configuration.payment_group_sequence,write_date:"
 msgid "Write Date"
@@ -149,7 +157,7 @@ msgstr "Posten"
 
 msgctxt "field:account.payment,origin:"
 msgid "Origin"
-msgstr ""
+msgstr "Herkunft"
 
 msgctxt "field:account.payment,party:"
 msgid "Party"
@@ -157,7 +165,7 @@ msgstr "Partei"
 
 msgctxt "field:account.payment,rec_name:"
 msgid "Record Name"
-msgstr ""
+msgstr "Bezeichnung des Datensatzes"
 
 msgctxt "field:account.payment,state:"
 msgid "State"
@@ -205,7 +213,7 @@ msgstr "Zahlungen"
 
 msgctxt "field:account.payment.group,rec_name:"
 msgid "Record Name"
-msgstr ""
+msgstr "Bezeichnung des Datensatzes"
 
 msgctxt "field:account.payment.group,write_date:"
 msgid "Write Date"
@@ -245,7 +253,7 @@ msgstr "Ausführungsmethode"
 
 msgctxt "field:account.payment.journal,rec_name:"
 msgid "Record Name"
-msgstr ""
+msgstr "Bezeichnung des Datensatzes"
 
 msgctxt "field:account.payment.journal,write_date:"
 msgid "Write Date"
@@ -293,7 +301,7 @@ msgstr "Lastschrifteinzug"
 
 msgctxt "field:party.party.payment_direct_debit,rec_name:"
 msgid "Record Name"
-msgstr ""
+msgstr "Bezeichnung des Datensatzes"
 
 msgctxt "field:party.party.payment_direct_debit,write_date:"
 msgid "Write Date"
@@ -349,7 +357,7 @@ msgstr "Offene Zahlungsposten"
 
 msgctxt "model:ir.action,name:act_pay_line"
 msgid "Pay Lines"
-msgstr "Zahlungsposten bezahlen"
+msgstr "Zahlungsposition bezahlen"
 
 msgctxt "model:ir.action,name:act_payment_form"
 msgid "Payments"
@@ -413,6 +421,34 @@ msgctxt ""
 msgid "Succeeded"
 msgstr "Erfolgreich"
 
+msgctxt "model:ir.model.button,string:move_line_pay_button"
+msgid "Pay Lines"
+msgstr "Zahlungsposten bezahlen"
+
+msgctxt "model:ir.model.button,string:move_line_payment_block_button"
+msgid "Block"
+msgstr "Sperren"
+
+msgctxt "model:ir.model.button,string:move_line_payment_unblock_button"
+msgid "Unblock"
+msgstr "Sperre aufheben"
+
+msgctxt "model:ir.model.button,string:payment_approve_button"
+msgid "Approve"
+msgstr "Bestätigen"
+
+msgctxt "model:ir.model.button,string:payment_draft_button"
+msgid "Draft"
+msgstr "Entwurf"
+
+msgctxt "model:ir.model.button,string:payment_fail_button"
+msgid "Fail"
+msgstr "Erfolglos markieren"
+
+msgctxt "model:ir.model.button,string:payment_succeed_button"
+msgid "Succeed"
+msgstr "Erfolgreich markieren"
+
 msgctxt "model:ir.sequence,name:sequence_account_payment_group"
 msgid "Default Account Payment Group"
 msgstr "Standard Zahlungsgruppe"
@@ -427,7 +463,7 @@ msgstr "Offene Zahlungsposten"
 
 msgctxt "model:ir.ui.menu,name:menu_payment_configuration"
 msgid "Payments"
-msgstr "Zahlungswesen"
+msgstr "Zahlungen"
 
 msgctxt "model:ir.ui.menu,name:menu_payment_form"
 msgid "Payments"
@@ -443,7 +479,7 @@ msgstr "Zahlungsjournale"
 
 msgctxt "model:ir.ui.menu,name:menu_payments"
 msgid "Payments"
-msgstr "Zahlungswesen"
+msgstr "Zahlungen"
 
 msgctxt "model:party.party.payment_direct_debit,name:"
 msgid "Party Payment Direct Debit"
@@ -517,45 +553,17 @@ msgctxt "view:account.configuration:"
 msgid "Payment"
 msgstr "Zahlung"
 
-msgctxt "view:account.move.line:"
-msgid "Block"
-msgstr "Sperren"
-
-msgctxt "view:account.move.line:"
-msgid "Pay Lines"
-msgstr "Zahlungsposten bezahlen"
-
-msgctxt "view:account.move.line:"
-msgid "Unblock"
-msgstr "Sperre aufheben"
-
 msgctxt "view:account.payment.process.start:"
 msgid "Process Payments?"
 msgstr "Zahlungen ausführen?"
-
-msgctxt "view:account.payment:"
-msgid "Approve"
-msgstr "Bestätigen"
 
 msgctxt "view:account.payment:"
 msgid "Description"
 msgstr "Beschreibung"
 
 msgctxt "view:account.payment:"
-msgid "Draft"
-msgstr "Entwurf"
-
-msgctxt "view:account.payment:"
-msgid "Fail"
-msgstr "Erfolglos"
-
-msgctxt "view:account.payment:"
 msgid "Other Info"
 msgstr "Sonstiges"
-
-msgctxt "view:account.payment:"
-msgid "Succeed"
-msgstr "Erfolgreich"
 
 msgctxt "wizard_button:account.move.line.pay,ask_journal,end:"
 msgid "Cancel"
@@ -572,3 +580,31 @@ msgstr "Abbrechen"
 msgctxt "wizard_button:account.payment.process,start,process:"
 msgid "Process"
 msgstr "Ausführen"
+
+msgctxt "view:account.move.line:"
+msgid "Block"
+msgstr "Sperren"
+
+msgctxt "view:account.move.line:"
+msgid "Pay Lines"
+msgstr "Zahlungsposten bezahlen"
+
+msgctxt "view:account.move.line:"
+msgid "Unblock"
+msgstr "Sperre aufheben"
+
+msgctxt "view:account.payment:"
+msgid "Approve"
+msgstr "Bestätigen"
+
+msgctxt "view:account.payment:"
+msgid "Draft"
+msgstr "Entwurf"
+
+msgctxt "view:account.payment:"
+msgid "Fail"
+msgstr "Erfolglos"
+
+msgctxt "view:account.payment:"
+msgid "Succeed"
+msgstr "Erfolgreich"
