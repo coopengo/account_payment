@@ -4,10 +4,10 @@ from itertools import groupby
 
 from trytond.model import Workflow, ModelView, ModelSQL, fields
 from trytond.pyson import Eval, If
+from trytond.rpc import RPC
 from trytond.transaction import Transaction
 from trytond.wizard import Wizard, StateView, StateAction, Button
 from trytond.pool import Pool
-from trytond import backend
 
 __all__ = ['Journal', 'Group', 'Payment',
     'ProcessPaymentStart', 'ProcessPayment']
@@ -62,8 +62,7 @@ class Group(ModelSQL, ModelView):
 
     @classmethod
     def __register__(cls, module_name):
-        TableHandler = backend.get('TableHandler')
-        table_h = TableHandler(cls, module_name)
+        table_h = cls.__table_handler__(module_name)
 
         # Migration from 3.8: rename reference into number
         if table_h.column_exist('reference'):
@@ -200,12 +199,12 @@ class Payment(Workflow, ModelSQL, ModelView):
         cls._buttons.update({
                 'draft': {
                     'invisible': Eval('state') != 'approved',
-                    'icon': 'tryton-go-previous',
+                    'icon': 'tryton-back',
                     'depends': ['state'],
                     },
                 'approve': {
                     'invisible': Eval('state') != 'draft',
-                    'icon': 'tryton-go-next',
+                    'icon': 'tryton-forward',
                     'depends': ['state'],
                     },
                 'succeed': {
@@ -220,6 +219,10 @@ class Payment(Workflow, ModelSQL, ModelView):
                     'icon': 'tryton-cancel',
                     'depends': ['state'],
                     },
+                })
+        cls.__rpc__.update({
+                'approve': RPC(
+                    readonly=False, instantiate=0, fresh_session=True),
                 })
 
     @staticmethod
