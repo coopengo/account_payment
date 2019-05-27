@@ -2,12 +2,16 @@
 # this repository contains the full copyright notices and license terms.
 from itertools import groupby
 
+from trytond.i18n import gettext
 from trytond.model import Workflow, ModelView, ModelSQL, fields
+from trytond.model.exceptions import AccessError
 from trytond.pyson import Eval, If
 from trytond.rpc import RPC
 from trytond.transaction import Transaction
 from trytond.wizard import Wizard, StateView, StateAction, Button
 from trytond.pool import Pool
+
+from .exceptions import OverpayWarning
 
 __all__ = ['Journal', 'Group', 'Payment',
     'ProcessPaymentStart', 'ProcessPayment']
@@ -28,6 +32,11 @@ class Journal(ModelSQL, ModelView):
     process_method = fields.Selection([
             ('manual', 'Manual'),
             ], 'Process Method', required=True)
+
+    @classmethod
+    def __setup__(cls):
+        super().__setup__()
+        cls._order.insert(0, ('name', 'ASC'))
 
     @staticmethod
     def default_currency():
@@ -137,7 +146,10 @@ class Payment(Workflow, ModelSQL, ModelView):
                 ['OR', ('debit', '>', 0), ('credit', '<', 0)],
                 ['OR', ('credit', '>', 0), ('debit', '<', 0)],
                 ),
-            ('account.kind', 'in', ['receivable', 'payable']),
+            ['OR',
+                ('account.type.receivable', '=', True),
+                ('account.type.payable', '=', True),
+                ],
             ('party', 'in', [Eval('party', None), None]),
             If(Eval('state') == 'draft',
                 [
@@ -183,10 +195,6 @@ class Payment(Workflow, ModelSQL, ModelView):
     def __setup__(cls):
         super(Payment, cls).__setup__()
         cls._order.insert(0, ('date', 'DESC'))
-        cls._error_messages.update({
-                'delete_draft': ('Payment "%s" must be in draft before '
-                    'deletion.'),
-                })
         cls._transitions |= set((
                 ('draft', 'approved'),
                 ('approved', 'processing'),
@@ -290,7 +298,9 @@ class Payment(Workflow, ModelSQL, ModelView):
     def delete(cls, payments):
         for payment in payments:
             if payment.state != 'draft':
-                cls.raise_user_error('delete_draft', (payment.rec_name))
+                raise AccessError(
+                    gettext('account_payment.msg_payment_delete_draft',
+                        payment=payment.rec_name))
         super(Payment, cls).delete(payments)
 
     @classmethod
@@ -350,14 +360,6 @@ class ProcessPayment(Wizard):
             ])
     process = StateAction('account_payment.act_payment_group_form')
 
-    @classmethod
-    def __setup__(cls):
-        super(ProcessPayment, cls).__setup__()
-        cls._error_messages.update({
-                'overpay': 'The Payment "%(payment)s" overpays '
-                'the Line "%(line)s".',
-                })
-
     def _group_payment_key(self, payment):
         return (('journal', payment.journal.id), ('kind', payment.kind))
 
@@ -369,15 +371,16 @@ class ProcessPayment(Wizard):
     def do_process(self, action):
         pool = Pool()
         Payment = pool.get('account.payment')
+        Warning = pool.get('res.user.warning')
         payments = Payment.browse(Transaction().context['active_ids'])
 
         for payment in payments:
             if payment.line and payment.line.payment_amount < 0:
-                self.raise_user_warning(str(payment),
-                    'overpay', {
-                        'payment': payment.rec_name,
-                        'line': payment.line.rec_name,
-                        })
+                if Warning.check(str(payment)):
+                    raise OverpayWarning(str(payment),
+                        gettext('account_payment.msg_payment_overpay',
+                            payment=payment.rec_name,
+                            line=payment.line.rec_name))
 
         groups = []
         payments = sorted(payments, key=self._group_payment_key)
