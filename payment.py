@@ -13,9 +13,6 @@ from trytond.pool import Pool
 
 from .exceptions import OverpayWarning
 
-__all__ = ['Journal', 'Group', 'Payment',
-    'ProcessPaymentStart', 'ProcessPayment']
-
 KINDS = [
     ('payable', 'Payable'),
     ('receivable', 'Receivable'),
@@ -106,6 +103,7 @@ class Group(ModelSQL, ModelView):
         default.setdefault('payments', None)
         return super(Group, cls).copy(groups, default=default)
 
+
 _STATES = {
     'readonly': Eval('state') != 'draft',
     }
@@ -183,6 +181,9 @@ class Payment(Workflow, ModelSQL, ModelView):
             ('company', '=', Eval('company', -1)),
             ],
         depends=['state', 'company'])
+    process_method = fields.Function(
+        fields.Selection('get_process_methods', "Process Method"),
+        'on_change_with_process_method', searcher='search_process_method')
     state = fields.Selection([
             ('draft', 'Draft'),
             ('approved', 'Approved'),
@@ -274,7 +275,8 @@ class Payment(Workflow, ModelSQL, ModelView):
     def on_change_party(self):
         self.line = None
 
-    @fields.depends('line')
+    @fields.depends('line',
+        '_parent_line.maturity_date', '_parent_line.payment_amount')
     def on_change_line(self):
         if self.line:
             self.date = self.line.maturity_date
@@ -293,6 +295,22 @@ class Payment(Workflow, ModelSQL, ModelView):
                 ('model', 'in', models),
                 ])
         return [(None, '')] + [(m.model, m.name) for m in models]
+
+    @fields.depends('journal')
+    def on_change_with_process_method(self, name=None):
+        if self.journal:
+            return self.journal.process_method
+
+    @classmethod
+    def search_process_method(cls, name, clause):
+        return [('journal.' + clause[0],) + tuple(clause[1:])]
+
+    @classmethod
+    def get_process_methods(cls):
+        pool = Pool()
+        Journal = pool.get('account.payment.journal')
+        field_name = 'process_method'
+        return Journal.fields_get([field_name])[field_name]['selection']
 
     @classmethod
     def delete(cls, payments):

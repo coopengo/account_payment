@@ -1,5 +1,6 @@
 # This file is part of Tryton.  The COPYRIGHT file at the top level of
 # this repository contains the full copyright notices and license terms.
+import hashlib
 from decimal import Decimal
 
 from sql import Null
@@ -20,10 +21,6 @@ from trytond.modules.company.model import CompanyValueMixin
 
 from .exceptions import BlockedWarning, GroupWarning
 from .payment import KINDS
-
-__all__ = ['MoveLine', 'PayLine', 'PayLineAskJournal',
-    'Configuration', 'ConfigurationPaymentGroupSequence',
-    'Invoice']
 
 
 class MoveLine(metaclass=PoolMeta):
@@ -63,7 +60,8 @@ class MoveLine(metaclass=PoolMeta):
         super(MoveLine, cls).__setup__()
         cls._buttons.update({
                 'pay': {
-                    'invisible': ~Eval('payment_kind').in_(list(dict(KINDS).keys())),
+                    'invisible': ~Eval('payment_kind').in_(
+                        list(dict(KINDS).keys())),
                     'depends': ['payment_kind'],
                     },
                 'payment_block': {
@@ -186,14 +184,9 @@ class PayLineStart(ModelView):
     "Pay Line"
     __name__ = 'account.move.line.pay.start'
     date = fields.Date(
-        "Date", required=True,
-        help="When the payments are scheduled to happen.")
-
-    @classmethod
-    def default_date(cls):
-        pool = Pool()
-        Date = pool.get('ir.date')
-        return Date.today()
+        "Date",
+        help="When the payments are scheduled to happen.\n"
+        "Leave empty to use the lines' maturity dates.")
 
 
 class PayLineAskJournal(ModelView):
@@ -257,19 +250,24 @@ class PayLine(Wizard):
                     ('payment_amount', '!=', 0),
                     ('move_state', '=', 'posted'),
                     ])
-            for line in others:
-                warning_name = '%s:%s' % (reverse[kind], line.party)
+            for party in parties:
+                party_lines = [l for l in others if l.party == party]
+                if not party_lines:
+                    continue
+                lines = [l for l in types[kind]['lines']
+                    if l.party == party]
+                warning_name = '%s:%s:%s' % (
+                    reverse[kind], party,
+                    hashlib.md5(str(lines).encode('utf-8')).hexdigest())
                 if Warning.check(warning_name):
-                    lines = [l for l in types[kind]['lines']
-                        if l.party == line.party]
                     names = ', '.join(l.rec_name for l in lines[:5])
                     if len(lines) > 5:
                         names += '...'
                     raise GroupWarning(warning_name,
                         gettext('account_payment.msg_pay_line_group',
                             names=names,
-                            party=line.party.rec_name,
-                            line=line.rec_name))
+                            party=party.rec_name,
+                            line=party_lines[0].rec_name))
         return {}
 
     def _get_journals(self):
@@ -336,16 +334,19 @@ class PayLine(Wizard):
         else:
             kind = 'payable'
         journal = journals[self._get_journal_key(line)]
-
-        return Payment(
+        payment = Payment(
             company=line.move.company,
             journal=journal,
             party=line.party,
             kind=kind,
             amount=line.payment_amount,
             line=line,
-            date=self.start.date,
             )
+        date = self.start.date or line.maturity_date
+        # Use default value when empty
+        if date:
+            payment.date = date
+        return payment
 
     def do_pay(self, action):
         pool = Pool()
@@ -400,8 +401,7 @@ class ConfigurationPaymentGroupSequence(ModelSQL, CompanyValueMixin):
 
     @classmethod
     def __register__(cls, module_name):
-        TableHandler = backend.get('TableHandler')
-        exist = TableHandler.table_exist(cls._table)
+        exist = backend.TableHandler.table_exist(cls._table)
 
         super(ConfigurationPaymentGroupSequence, cls).__register__(module_name)
 
@@ -471,6 +471,7 @@ class Invoice(metaclass=PoolMeta):
                     if line.reconciliation:
                         continue
                     if (name == 'amount_to_pay_today'
+                            and line.maturity_date
                             and line.maturity_date > today):
                         continue
                     payment_amount = Decimal(0)
