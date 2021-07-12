@@ -27,6 +27,10 @@ msgctxt "field:account.move.line,payment_blocked:"
 msgid "Blocked"
 msgstr "Gesperrt"
 
+msgctxt "field:account.move.line,payment_currency:"
+msgid "Payment Currency"
+msgstr "Währung Zahlung"
+
 msgctxt "field:account.move.line,payment_direct_debit:"
 msgid "Direct Debit"
 msgstr "Lastschrifteinzug"
@@ -63,6 +67,10 @@ msgctxt "field:account.payment,amount:"
 msgid "Amount"
 msgstr "Betrag"
 
+msgctxt "field:account.payment,approved_by:"
+msgid "Approved by"
+msgstr "Genehmigt von"
+
 msgctxt "field:account.payment,company:"
 msgid "Company"
 msgstr "Unternehmen"
@@ -82,6 +90,10 @@ msgstr "Datum"
 msgctxt "field:account.payment,description:"
 msgid "Description"
 msgstr "Beschreibung"
+
+msgctxt "field:account.payment,failed_by:"
+msgid "Failure Noted by"
+msgstr "Fehlschlag vermerkt von"
 
 msgctxt "field:account.payment,group:"
 msgid "Group"
@@ -115,9 +127,17 @@ msgctxt "field:account.payment,state:"
 msgid "State"
 msgstr "Status"
 
+msgctxt "field:account.payment,succeeded_by:"
+msgid "Success Noted by"
+msgstr "Erfolg vermerkt von"
+
 msgctxt "field:account.payment.group,company:"
 msgid "Company"
 msgstr "Unternehmen"
+
+msgctxt "field:account.payment.group,currency_digits:"
+msgid "Currency Digits"
+msgstr "Nachkommastellen Währung"
 
 msgctxt "field:account.payment.group,journal:"
 msgid "Journal"
@@ -130,6 +150,22 @@ msgstr "Art"
 msgctxt "field:account.payment.group,number:"
 msgid "Number"
 msgstr "Nummer"
+
+msgctxt "field:account.payment.group,payment_amount:"
+msgid "Payment Total Amount"
+msgstr "Gesamtbetrag Zahlung"
+
+msgctxt "field:account.payment.group,payment_amount_succeeded:"
+msgid "Payment Succeeded"
+msgstr "Zahlung erfolgreich"
+
+msgctxt "field:account.payment.group,payment_complete:"
+msgid "Payment Complete"
+msgstr "Zahlungslauf vollständig"
+
+msgctxt "field:account.payment.group,payment_count:"
+msgid "Payment Count"
+msgstr "Anzahl Zahlungen"
 
 msgctxt "field:account.payment.group,payments:"
 msgid "Payments"
@@ -186,6 +222,22 @@ msgid ""
 msgstr ""
 "Das Datum an dem die Ausführung der Zahlungen geplant ist.\n"
 "Leer lassen, um das Fälligkeitsdatum der Buchungszeilen zu verwenden."
+
+msgctxt "help:account.payment.group,payment_amount:"
+msgid "The sum of all payment amounts."
+msgstr "Die Summe aller Zahlbeträge."
+
+msgctxt "help:account.payment.group,payment_amount_succeeded:"
+msgid "The sum of the amounts of the successful payments."
+msgstr "Die Summe aller Beträge von erfolgreichen Zahlungen."
+
+msgctxt "help:account.payment.group,payment_complete:"
+msgid "All the payments in the group are complete."
+msgstr "Alle Zahlungen im Zahlungslauf sind vollständig."
+
+msgctxt "help:account.payment.group,payment_count:"
+msgid "The number of payments in the group."
+msgstr "Die Anzahl der Zahlungen im Zahlungslauf."
 
 msgctxt "help:party.party,payment_direct_debit:"
 msgid "Check if supplier does direct debit."
@@ -244,12 +296,12 @@ msgid "Payments"
 msgstr "Zahlungen"
 
 msgctxt "model:ir.action,name:act_payment_group_form"
-msgid "Payment Groups"
-msgstr "Zahlungsgruppen"
+msgid "Groups"
+msgstr "Zahlungsläufe"
 
 msgctxt "model:ir.action,name:act_payment_journal_form"
-msgid "Payment Journals"
-msgstr "Zahlungsjournale"
+msgid "Journals"
+msgstr "Journale"
 
 msgctxt "model:ir.action,name:act_process_payments"
 msgid "Process Payments"
@@ -353,16 +405,16 @@ msgctxt "model:ir.model.button,string:payment_succeed_button"
 msgid "Succeed"
 msgstr "Erfolgreich markieren"
 
-msgctxt "model:ir.rule.group,name:rule_group_payment"
-msgid "User in company"
+msgctxt "model:ir.rule.group,name:rule_group_payment_companies"
+msgid "User in companies"
 msgstr "Benutzer im Unternehmen"
 
-msgctxt "model:ir.rule.group,name:rule_group_payment_group"
-msgid "User in company"
+msgctxt "model:ir.rule.group,name:rule_group_payment_group_companies"
+msgid "User in companies"
 msgstr "Benutzer im Unternehmen"
 
-msgctxt "model:ir.rule.group,name:rule_group_payment_journal"
-msgid "User in company"
+msgctxt "model:ir.rule.group,name:rule_group_payment_journal_companies"
+msgid "User in companies"
 msgstr "Benutzer im Unternehmen"
 
 msgctxt "model:ir.sequence,name:sequence_account_payment_group"
@@ -386,12 +438,12 @@ msgid "Payments"
 msgstr "Zahlungen"
 
 msgctxt "model:ir.ui.menu,name:menu_payment_group_form"
-msgid "Payment Groups"
+msgid "Groups"
 msgstr "Zahlungsläufe"
 
 msgctxt "model:ir.ui.menu,name:menu_payment_journal_form"
-msgid "Payment Journals"
-msgstr "Zahlungsjournale"
+msgid "Journals"
+msgstr "Journale"
 
 msgctxt "model:ir.ui.menu,name:menu_payments"
 msgid "Payments"
@@ -464,6 +516,26 @@ msgstr "Nummernkreis Zahlungslauf"
 msgctxt "view:account.configuration:"
 msgid "Payment"
 msgstr "Zahlung"
+
+msgctxt "view:account.payment.group:"
+msgid "Complete"
+msgstr "Vollständig"
+
+msgctxt "view:account.payment.group:"
+msgid "Count"
+msgstr "Anzahl"
+
+msgctxt "view:account.payment.group:"
+msgid "Payments Info"
+msgstr "Zahlungsinformationen"
+
+msgctxt "view:account.payment.group:"
+msgid "Succeeded"
+msgstr "Erfolgreich"
+
+msgctxt "view:account.payment.group:"
+msgid "Total Amount"
+msgstr "Gesamtbetrag"
 
 msgctxt "view:account.payment.process.start:"
 msgid "Process Payments?"

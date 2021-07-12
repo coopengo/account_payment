@@ -27,6 +27,11 @@ msgctxt "field:account.move.line,payment_blocked:"
 msgid "Blocked"
 msgstr "Blokeeritud"
 
+#, fuzzy
+msgctxt "field:account.move.line,payment_currency:"
+msgid "Payment Currency"
+msgstr "Tasumise väärtus"
+
 msgctxt "field:account.move.line,payment_direct_debit:"
 msgid "Direct Debit"
 msgstr "Otsene deebet"
@@ -63,6 +68,11 @@ msgctxt "field:account.payment,amount:"
 msgid "Amount"
 msgstr "Väärtus"
 
+#, fuzzy
+msgctxt "field:account.payment,approved_by:"
+msgid "Approved by"
+msgstr "Kinnitatud"
+
 msgctxt "field:account.payment,company:"
 msgid "Company"
 msgstr "Ettevõte"
@@ -82,6 +92,11 @@ msgstr "Kuupäev"
 msgctxt "field:account.payment,description:"
 msgid "Description"
 msgstr "Selgitus"
+
+#, fuzzy
+msgctxt "field:account.payment,failed_by:"
+msgid "Failure Noted by"
+msgstr "Looja"
 
 msgctxt "field:account.payment,group:"
 msgid "Group"
@@ -116,9 +131,19 @@ msgctxt "field:account.payment,state:"
 msgid "State"
 msgstr "Olek"
 
+#, fuzzy
+msgctxt "field:account.payment,succeeded_by:"
+msgid "Success Noted by"
+msgstr "Õnnestunud"
+
 msgctxt "field:account.payment.group,company:"
 msgid "Company"
 msgstr "Ettevõte"
+
+#, fuzzy
+msgctxt "field:account.payment.group,currency_digits:"
+msgid "Currency Digits"
+msgstr "Valuuta numbriväärtuse arv"
 
 msgctxt "field:account.payment.group,journal:"
 msgid "Journal"
@@ -131,6 +156,26 @@ msgstr "Vorm"
 msgctxt "field:account.payment.group,number:"
 msgid "Number"
 msgstr "Number"
+
+#, fuzzy
+msgctxt "field:account.payment.group,payment_amount:"
+msgid "Payment Total Amount"
+msgstr "Tasumise väärtus"
+
+#, fuzzy
+msgctxt "field:account.payment.group,payment_amount_succeeded:"
+msgid "Payment Succeeded"
+msgstr "Õnnestunud"
+
+#, fuzzy
+msgctxt "field:account.payment.group,payment_complete:"
+msgid "Payment Complete"
+msgstr "Tasumise grupp"
+
+#, fuzzy
+msgctxt "field:account.payment.group,payment_count:"
+msgid "Payment Count"
+msgstr "Tasumise väärtus"
 
 msgctxt "field:account.payment.group,payments:"
 msgid "Payments"
@@ -186,6 +231,22 @@ msgid ""
 "When the payments are scheduled to happen.\n"
 "Leave empty to use the lines' maturity dates."
 msgstr "Millal on tasumised planeeritud toimuma."
+
+msgctxt "help:account.payment.group,payment_amount:"
+msgid "The sum of all payment amounts."
+msgstr ""
+
+msgctxt "help:account.payment.group,payment_amount_succeeded:"
+msgid "The sum of the amounts of the successful payments."
+msgstr ""
+
+msgctxt "help:account.payment.group,payment_complete:"
+msgid "All the payments in the group are complete."
+msgstr ""
+
+msgctxt "help:account.payment.group,payment_count:"
+msgid "The number of payments in the group."
+msgstr ""
 
 msgctxt "help:party.party,payment_direct_debit:"
 msgid "Check if supplier does direct debit."
@@ -243,13 +304,15 @@ msgctxt "model:ir.action,name:act_payment_form_line_relate"
 msgid "Payments"
 msgstr "Tasumised"
 
+#, fuzzy
 msgctxt "model:ir.action,name:act_payment_group_form"
-msgid "Payment Groups"
-msgstr "Tasumiste grupp"
+msgid "Groups"
+msgstr "Grupp"
 
+#, fuzzy
 msgctxt "model:ir.action,name:act_payment_journal_form"
-msgid "Payment Journals"
-msgstr "Tasumiste andmik"
+msgid "Journals"
+msgstr "Andmikud"
 
 msgctxt "model:ir.action,name:act_process_payments"
 msgid "Process Payments"
@@ -347,16 +410,19 @@ msgctxt "model:ir.model.button,string:payment_succeed_button"
 msgid "Succeed"
 msgstr "Õnnestunud"
 
-msgctxt "model:ir.rule.group,name:rule_group_payment"
-msgid "User in company"
+#, fuzzy
+msgctxt "model:ir.rule.group,name:rule_group_payment_companies"
+msgid "User in companies"
 msgstr "Kasutaja ettevõttes"
 
-msgctxt "model:ir.rule.group,name:rule_group_payment_group"
-msgid "User in company"
+#, fuzzy
+msgctxt "model:ir.rule.group,name:rule_group_payment_group_companies"
+msgid "User in companies"
 msgstr "Kasutaja ettevõttes"
 
-msgctxt "model:ir.rule.group,name:rule_group_payment_journal"
-msgid "User in company"
+#, fuzzy
+msgctxt "model:ir.rule.group,name:rule_group_payment_journal_companies"
+msgid "User in companies"
 msgstr "Kasutaja ettevõttes"
 
 msgctxt "model:ir.sequence,name:sequence_account_payment_group"
@@ -379,13 +445,15 @@ msgctxt "model:ir.ui.menu,name:menu_payment_form"
 msgid "Payments"
 msgstr "Tasumised"
 
+#, fuzzy
 msgctxt "model:ir.ui.menu,name:menu_payment_group_form"
-msgid "Payment Groups"
-msgstr "Tasumise grupp"
+msgid "Groups"
+msgstr "Grupp"
 
+#, fuzzy
 msgctxt "model:ir.ui.menu,name:menu_payment_journal_form"
-msgid "Payment Journals"
-msgstr "Tasumise andmik"
+msgid "Journals"
+msgstr "Andmikud"
 
 msgctxt "model:ir.ui.menu,name:menu_payments"
 msgid "Payments"
@@ -458,6 +526,30 @@ msgstr "Grupeeri jada"
 msgctxt "view:account.configuration:"
 msgid "Payment"
 msgstr "Tasumine"
+
+msgctxt "view:account.payment.group:"
+msgid "Complete"
+msgstr ""
+
+#, fuzzy
+msgctxt "view:account.payment.group:"
+msgid "Count"
+msgstr "Väärtus"
+
+#, fuzzy
+msgctxt "view:account.payment.group:"
+msgid "Payments Info"
+msgstr "Tasumised"
+
+#, fuzzy
+msgctxt "view:account.payment.group:"
+msgid "Succeeded"
+msgstr "Õnnestunud"
+
+#, fuzzy
+msgctxt "view:account.payment.group:"
+msgid "Total Amount"
+msgstr "Väärtus"
 
 msgctxt "view:account.payment.process.start:"
 msgid "Process Payments?"
