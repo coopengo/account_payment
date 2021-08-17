@@ -27,6 +27,11 @@ msgctxt "field:account.move.line,payment_blocked:"
 msgid "Blocked"
 msgstr "Bloqueado"
 
+#, fuzzy
+msgctxt "field:account.move.line,payment_currency:"
+msgid "Payment Currency"
+msgstr "Montante do Pagamento"
+
 msgctxt "field:account.move.line,payment_direct_debit:"
 msgid "Direct Debit"
 msgstr "Débito Direto"
@@ -64,6 +69,11 @@ msgctxt "field:account.payment,amount:"
 msgid "Amount"
 msgstr "Montante"
 
+#, fuzzy
+msgctxt "field:account.payment,approved_by:"
+msgid "Approved by"
+msgstr "Approved"
+
 msgctxt "field:account.payment,company:"
 msgid "Company"
 msgstr "Empresa"
@@ -83,6 +93,11 @@ msgstr "Data"
 msgctxt "field:account.payment,description:"
 msgid "Description"
 msgstr "Descrição"
+
+#, fuzzy
+msgctxt "field:account.payment,failed_by:"
+msgid "Failure Noted by"
+msgstr "Criado por"
 
 msgctxt "field:account.payment,group:"
 msgid "Group"
@@ -117,9 +132,19 @@ msgctxt "field:account.payment,state:"
 msgid "State"
 msgstr "Estado"
 
+#, fuzzy
+msgctxt "field:account.payment,succeeded_by:"
+msgid "Success Noted by"
+msgstr "Succeed"
+
 msgctxt "field:account.payment.group,company:"
 msgid "Company"
 msgstr "Empresa"
+
+#, fuzzy
+msgctxt "field:account.payment.group,currency_digits:"
+msgid "Currency Digits"
+msgstr "Dígitos Decimais da Moeda"
 
 msgctxt "field:account.payment.group,journal:"
 msgid "Journal"
@@ -132,6 +157,26 @@ msgstr "Classe"
 msgctxt "field:account.payment.group,number:"
 msgid "Number"
 msgstr "Número"
+
+#, fuzzy
+msgctxt "field:account.payment.group,payment_amount:"
+msgid "Payment Total Amount"
+msgstr "Montante do Pagamento"
+
+#, fuzzy
+msgctxt "field:account.payment.group,payment_amount_succeeded:"
+msgid "Payment Succeeded"
+msgstr "Succeeded"
+
+#, fuzzy
+msgctxt "field:account.payment.group,payment_complete:"
+msgid "Payment Complete"
+msgstr "Grupo de Pagamentos"
+
+#, fuzzy
+msgctxt "field:account.payment.group,payment_count:"
+msgid "Payment Count"
+msgstr "Montante do Pagamento"
 
 msgctxt "field:account.payment.group,payments:"
 msgid "Payments"
@@ -185,6 +230,22 @@ msgctxt "help:account.move.line.pay.start,date:"
 msgid ""
 "When the payments are scheduled to happen.\n"
 "Leave empty to use the lines' maturity dates."
+msgstr ""
+
+msgctxt "help:account.payment.group,payment_amount:"
+msgid "The sum of all payment amounts."
+msgstr ""
+
+msgctxt "help:account.payment.group,payment_amount_succeeded:"
+msgid "The sum of the amounts of the successful payments."
+msgstr ""
+
+msgctxt "help:account.payment.group,payment_complete:"
+msgid "All the payments in the group are complete."
+msgstr ""
+
+msgctxt "help:account.payment.group,payment_count:"
+msgid "The number of payments in the group."
 msgstr ""
 
 msgctxt "help:party.party,payment_direct_debit:"
@@ -251,13 +312,13 @@ msgstr "Payments"
 
 #, fuzzy
 msgctxt "model:ir.action,name:act_payment_group_form"
-msgid "Payment Groups"
-msgstr "Payment Groups"
+msgid "Groups"
+msgstr "Grupo"
 
 #, fuzzy
 msgctxt "model:ir.action,name:act_payment_journal_form"
-msgid "Payment Journals"
-msgstr "Payment Journals"
+msgid "Journals"
+msgstr "Diários"
 
 #, fuzzy
 msgctxt "model:ir.action,name:act_process_payments"
@@ -333,7 +394,7 @@ msgstr ""
 #, fuzzy
 msgctxt "model:ir.message,text:msg_payment_overpay"
 msgid "Payment \"%(payment)s\" overpays line \"%(line)s\"."
-msgstr "O Pagamento  \"%(payment)s\" excede a Linha \"%(line)s\"."
+msgstr "O Pagamento \"%(payment)s\" excede a Linha \"%(line)s\"."
 
 msgctxt "model:ir.model.button,string:move_line_pay_button"
 msgid "Pay Lines"
@@ -363,16 +424,16 @@ msgctxt "model:ir.model.button,string:payment_succeed_button"
 msgid "Succeed"
 msgstr "Succeed"
 
-msgctxt "model:ir.rule.group,name:rule_group_payment"
-msgid "User in company"
+msgctxt "model:ir.rule.group,name:rule_group_payment_companies"
+msgid "User in companies"
 msgstr ""
 
-msgctxt "model:ir.rule.group,name:rule_group_payment_group"
-msgid "User in company"
+msgctxt "model:ir.rule.group,name:rule_group_payment_group_companies"
+msgid "User in companies"
 msgstr ""
 
-msgctxt "model:ir.rule.group,name:rule_group_payment_journal"
-msgid "User in company"
+msgctxt "model:ir.rule.group,name:rule_group_payment_journal_companies"
+msgid "User in companies"
 msgstr ""
 
 #, fuzzy
@@ -402,13 +463,13 @@ msgstr "Payments"
 
 #, fuzzy
 msgctxt "model:ir.ui.menu,name:menu_payment_group_form"
-msgid "Payment Groups"
-msgstr "Payment Groups"
+msgid "Groups"
+msgstr "Grupo"
 
 #, fuzzy
 msgctxt "model:ir.ui.menu,name:menu_payment_journal_form"
-msgid "Payment Journals"
-msgstr "Payment Journals"
+msgid "Journals"
+msgstr "Diários"
 
 #, fuzzy
 msgctxt "model:ir.ui.menu,name:menu_payments"
@@ -484,6 +545,30 @@ msgstr "Sequência do Grupo"
 msgctxt "view:account.configuration:"
 msgid "Payment"
 msgstr "Pagamento"
+
+msgctxt "view:account.payment.group:"
+msgid "Complete"
+msgstr ""
+
+#, fuzzy
+msgctxt "view:account.payment.group:"
+msgid "Count"
+msgstr "Montante"
+
+#, fuzzy
+msgctxt "view:account.payment.group:"
+msgid "Payments Info"
+msgstr "Pagamentos"
+
+#, fuzzy
+msgctxt "view:account.payment.group:"
+msgid "Succeeded"
+msgstr "Succeeded"
+
+#, fuzzy
+msgctxt "view:account.payment.group:"
+msgid "Total Amount"
+msgstr "Montante"
 
 msgctxt "view:account.payment.process.start:"
 msgid "Process Payments?"

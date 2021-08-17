@@ -13,7 +13,7 @@ Imports::
     ...     create_chart, get_accounts
     >>> tomorrow = datetime.date.today() + datetime.timedelta(days=1)
 
-Install account_payment::
+Activate modules::
 
     >>> config = activate_modules('account_payment')
 
@@ -21,6 +21,20 @@ Create company::
 
     >>> _ = create_company()
     >>> company = get_company()
+
+Set employee::
+
+    >>> User = Model.get('res.user')
+    >>> Party = Model.get('party.party')
+    >>> Employee = Model.get('company.employee')
+    >>> employee_party = Party(name="Employee")
+    >>> employee_party.save()
+    >>> employee = Employee(party=employee_party)
+    >>> employee.save()
+    >>> user = User(config.user)
+    >>> user.employees.append(employee)
+    >>> user.employee = employee
+    >>> user.save()
 
 Create fiscal year::
 
@@ -32,9 +46,10 @@ Create chart of accounts::
     >>> _ = create_chart(company)
     >>> accounts = get_accounts(company)
     >>> payable = accounts['payable']
+    >>> expense = accounts['expense']
 
     >>> Journal = Model.get('account.journal')
-    >>> expense, = Journal.find([('code', '=', 'EXP')])
+    >>> expense_journal, = Journal.find([('code', '=', 'EXP')])
 
 Create payment journal::
 
@@ -45,7 +60,6 @@ Create payment journal::
 
 Create parties::
 
-    >>> Party = Model.get('party.party')
     >>> customer = Party(name='Customer')
     >>> customer.save()
     >>> supplier = Party(name='Supplier')
@@ -55,7 +69,7 @@ Create payable move::
 
     >>> Move = Model.get('account.move')
     >>> move = Move()
-    >>> move.journal = expense
+    >>> move.journal = expense_journal
     >>> line = move.lines.new(account=payable, party=supplier,
     ...     credit=Decimal('50.00'))
     >>> line = move.lines.new(account=expense, debit=Decimal('50.00'))
@@ -80,6 +94,8 @@ Partially pay line::
     Decimal('50.00')
     >>> payment.amount = Decimal('20.00')
     >>> payment.click('approve')
+    >>> payment.approved_by == employee
+    True
     >>> payment.state
     'approved'
     >>> process_payment = Wizard('account.payment.process', [payment])
@@ -90,6 +106,39 @@ Partially pay line::
     >>> line.reload()
     >>> line.payment_amount
     Decimal('30.00')
+
+Check the properties of the payment group::
+
+    >>> group = payment.group
+    >>> group.payment_count
+    1
+    >>> group.payment_amount
+    Decimal('20.00')
+    >>> group.payment_amount_succeeded
+    >>> group.payment_complete
+    False
+
+Success the payment and recheck the payment group::
+
+    >>> payment.click('succeed')
+    >>> payment.succeeded_by == employee
+    True
+    >>> payment.state
+    'succeeded'
+    >>> group.reload()
+    >>> group.payment_amount_succeeded
+    Decimal('20.00')
+    >>> group.payment_complete
+    True
+
+Search for the completed payment::
+
+    >>> PaymentGroup = Model.get('account.payment.group')
+    >>> group, = PaymentGroup.find([('payment_complete', '=', 'True')])
+    >>> group.payment_complete
+    True
+    >>> group.id == payment.group.id
+    True
 
 Partially fail to pay the remaining::
 
@@ -107,8 +156,13 @@ Partially fail to pay the remaining::
     Decimal('0.00')
     >>> payment.reload()
     >>> payment.click('fail')
+    >>> payment.failed_by == employee
+    True
     >>> payment.state
     'failed'
+    >>> payment.group.payment_complete
+    True
+    >>> payment.group.payment_amount_succeeded
     >>> line.reload()
     >>> line.payment_amount
     Decimal('30.00')

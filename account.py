@@ -12,7 +12,7 @@ from trytond import backend
 from trytond.i18n import gettext
 from trytond.pool import Pool, PoolMeta
 from trytond.model import ModelSQL, ModelView, fields
-from trytond.pyson import Eval, If, Bool
+from trytond.pyson import Eval, If, Bool, Id
 from trytond.wizard import (Wizard, StateView, StateAction, StateTransition,
     Button)
 from trytond.transaction import Transaction
@@ -36,6 +36,9 @@ class MoveLine(metaclass=PoolMeta):
             depends=['payment_kind', 'second_currency_digits',
                 'currency_digits']), 'get_payment_amount',
         searcher='search_payment_amount')
+    payment_currency = fields.Function(fields.Many2One(
+            'currency.currency', "Payment Currency"),
+        'get_payment_currency')
     payments = fields.One2Many('account.payment', 'line', 'Payments',
         readonly=True,
         states={
@@ -131,6 +134,12 @@ class MoveLine(metaclass=PoolMeta):
                 having=Operator(amount, value)
                 ))
         return [('id', 'in', query)]
+
+    def get_payment_currency(self, name):
+        if self.second_currency:
+            return self.second_currency.id
+        elif self.currency:
+            return self.currency.id
 
     def get_payment_kind(self, name):
         if (self.account.type.receivable
@@ -228,46 +237,49 @@ class PayLine(Wizard):
         Warning = pool.get('res.user.warning')
 
         reverse = {'receivable': 'payable', 'payable': 'receivable'}
-        types = {
-            kind: {
-                'parties': set(),
-                'lines': list(),
-                }
-            for kind in reverse.keys()}
-        lines = Line.browse(Transaction().context['active_ids'])
+        companies = {}
+        lines = self.records
         for line in lines:
+            types = companies.setdefault(line.move.company, {
+                    kind: {
+                        'parties': set(),
+                        'lines': list(),
+                        }
+                    for kind in reverse.keys()})
             for kind in types:
                 if getattr(line.account.type, kind):
                     types[kind]['parties'].add(line.party)
                     types[kind]['lines'].append(line)
 
-        for kind in types:
-            parties = types[kind]['parties']
-            others = Line.search([
-                    ('account.type.' + reverse[kind], '=', True),
-                    ('party', 'in', [p.id for p in parties]),
-                    ('reconciliation', '=', None),
-                    ('payment_amount', '!=', 0),
-                    ('move_state', '=', 'posted'),
-                    ])
-            for party in parties:
-                party_lines = [l for l in others if l.party == party]
-                if not party_lines:
-                    continue
-                lines = [l for l in types[kind]['lines']
-                    if l.party == party]
-                warning_name = '%s:%s:%s' % (
-                    reverse[kind], party,
-                    hashlib.md5(str(lines).encode('utf-8')).hexdigest())
-                if Warning.check(warning_name):
-                    names = ', '.join(l.rec_name for l in lines[:5])
-                    if len(lines) > 5:
-                        names += '...'
-                    raise GroupWarning(warning_name,
-                        gettext('account_payment.msg_pay_line_group',
-                            names=names,
-                            party=party.rec_name,
-                            line=party_lines[0].rec_name))
+        for company, types in companies.items():
+            for kind in types:
+                parties = types[kind]['parties']
+                others = Line.search([
+                        ('move.company', '=', company.id),
+                        ('account.type.' + reverse[kind], '=', True),
+                        ('party', 'in', [p.id for p in parties]),
+                        ('reconciliation', '=', None),
+                        ('payment_amount', '!=', 0),
+                        ('move_state', '=', 'posted'),
+                        ])
+                for party in parties:
+                    party_lines = [l for l in others if l.party == party]
+                    if not party_lines:
+                        continue
+                    lines = [l for l in types[kind]['lines']
+                        if l.party == party]
+                    warning_name = '%s:%s:%s' % (
+                        reverse[kind], party,
+                        hashlib.md5(str(lines).encode('utf-8')).hexdigest())
+                    if Warning.check(warning_name):
+                        names = ', '.join(l.rec_name for l in lines[:5])
+                        if len(lines) > 5:
+                            names += '...'
+                        raise GroupWarning(warning_name,
+                            gettext('account_payment.msg_pay_line_group',
+                                names=names,
+                                party=party.rec_name,
+                                line=party_lines[0].rec_name))
         return {}
 
     def _get_journals(self):
@@ -291,10 +303,7 @@ class PayLine(Wizard):
             return (company, currency)
 
     def _missing_journal(self):
-        pool = Pool()
-        Line = pool.get('account.move.line')
-
-        lines = Line.browse(Transaction().context['active_ids'])
+        lines = self.records
         journals = self._get_journals()
 
         for line in lines:
@@ -350,11 +359,10 @@ class PayLine(Wizard):
 
     def do_pay(self, action):
         pool = Pool()
-        Line = pool.get('account.move.line')
         Payment = pool.get('account.payment')
         Warning = pool.get('res.user.warning')
 
-        lines = Line.browse(Transaction().context['active_ids'])
+        lines = self.records
         journals = self._get_journals()
 
         payments = []
@@ -379,7 +387,9 @@ class Configuration(metaclass=PoolMeta):
             domain=[
                 ('company', 'in',
                     [Eval('context', {}).get('company', -1), None]),
-                ('code', '=', 'account.payment.group'),
+                ('sequence_type', '=',
+                    Id('account_payment',
+                        'sequence_type_account_payment_group')),
                 ]))
 
     @classmethod
@@ -395,7 +405,8 @@ class ConfigurationPaymentGroupSequence(ModelSQL, CompanyValueMixin):
         'ir.sequence', "Payment Group Sequence", required=True,
         domain=[
             ('company', 'in', [Eval('company', -1), None]),
-            ('code', '=', 'account.payment.group'),
+            ('sequence_type', '=',
+                Id('account_payment', 'sequence_type_account_payment_group')),
             ],
         depends=['company'])
 

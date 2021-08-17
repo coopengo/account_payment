@@ -27,6 +27,11 @@ msgctxt "field:account.move.line,payment_blocked:"
 msgid "Blocked"
 msgstr ""
 
+#, fuzzy
+msgctxt "field:account.move.line,payment_currency:"
+msgid "Payment Currency"
+msgstr "Libro diario de pago"
+
 msgctxt "field:account.move.line,payment_direct_debit:"
 msgid "Direct Debit"
 msgstr ""
@@ -63,6 +68,10 @@ msgctxt "field:account.payment,amount:"
 msgid "Amount"
 msgstr ""
 
+msgctxt "field:account.payment,approved_by:"
+msgid "Approved by"
+msgstr ""
+
 msgctxt "field:account.payment,company:"
 msgid "Company"
 msgstr ""
@@ -81,6 +90,10 @@ msgstr ""
 
 msgctxt "field:account.payment,description:"
 msgid "Description"
+msgstr ""
+
+msgctxt "field:account.payment,failed_by:"
+msgid "Failure Noted by"
 msgstr ""
 
 msgctxt "field:account.payment,group:"
@@ -115,8 +128,16 @@ msgctxt "field:account.payment,state:"
 msgid "State"
 msgstr ""
 
+msgctxt "field:account.payment,succeeded_by:"
+msgid "Success Noted by"
+msgstr ""
+
 msgctxt "field:account.payment.group,company:"
 msgid "Company"
+msgstr ""
+
+msgctxt "field:account.payment.group,currency_digits:"
+msgid "Currency Digits"
 msgstr ""
 
 msgctxt "field:account.payment.group,journal:"
@@ -130,6 +151,25 @@ msgstr "Clase"
 msgctxt "field:account.payment.group,number:"
 msgid "Number"
 msgstr ""
+
+#, fuzzy
+msgctxt "field:account.payment.group,payment_amount:"
+msgid "Payment Total Amount"
+msgstr "Libro diario de pago"
+
+msgctxt "field:account.payment.group,payment_amount_succeeded:"
+msgid "Payment Succeeded"
+msgstr ""
+
+#, fuzzy
+msgctxt "field:account.payment.group,payment_complete:"
+msgid "Payment Complete"
+msgstr "Libro diario de pago"
+
+#, fuzzy
+msgctxt "field:account.payment.group,payment_count:"
+msgid "Payment Count"
+msgstr "Libro diario de pago"
 
 msgctxt "field:account.payment.group,payments:"
 msgid "Payments"
@@ -183,6 +223,22 @@ msgctxt "help:account.move.line.pay.start,date:"
 msgid ""
 "When the payments are scheduled to happen.\n"
 "Leave empty to use the lines' maturity dates."
+msgstr ""
+
+msgctxt "help:account.payment.group,payment_amount:"
+msgid "The sum of all payment amounts."
+msgstr ""
+
+msgctxt "help:account.payment.group,payment_amount_succeeded:"
+msgid "The sum of the amounts of the successful payments."
+msgstr ""
+
+msgctxt "help:account.payment.group,payment_complete:"
+msgid "All the payments in the group are complete."
+msgstr ""
+
+msgctxt "help:account.payment.group,payment_count:"
+msgid "The number of payments in the group."
 msgstr ""
 
 msgctxt "help:party.party,payment_direct_debit:"
@@ -244,13 +300,13 @@ msgid "Payments"
 msgstr ""
 
 msgctxt "model:ir.action,name:act_payment_group_form"
-msgid "Payment Groups"
+msgid "Groups"
 msgstr ""
 
 #, fuzzy
 msgctxt "model:ir.action,name:act_payment_journal_form"
-msgid "Payment Journals"
-msgstr "Libro diario de pago"
+msgid "Journals"
+msgstr "Libros diarios"
 
 msgctxt "model:ir.action,name:act_process_payments"
 msgid "Process Payments"
@@ -351,16 +407,16 @@ msgctxt "model:ir.model.button,string:payment_succeed_button"
 msgid "Succeed"
 msgstr ""
 
-msgctxt "model:ir.rule.group,name:rule_group_payment"
-msgid "User in company"
+msgctxt "model:ir.rule.group,name:rule_group_payment_companies"
+msgid "User in companies"
 msgstr ""
 
-msgctxt "model:ir.rule.group,name:rule_group_payment_group"
-msgid "User in company"
+msgctxt "model:ir.rule.group,name:rule_group_payment_group_companies"
+msgid "User in companies"
 msgstr ""
 
-msgctxt "model:ir.rule.group,name:rule_group_payment_journal"
-msgid "User in company"
+msgctxt "model:ir.rule.group,name:rule_group_payment_journal_companies"
+msgid "User in companies"
 msgstr ""
 
 msgctxt "model:ir.sequence,name:sequence_account_payment_group"
@@ -384,13 +440,13 @@ msgid "Payments"
 msgstr ""
 
 msgctxt "model:ir.ui.menu,name:menu_payment_group_form"
-msgid "Payment Groups"
+msgid "Groups"
 msgstr ""
 
 #, fuzzy
 msgctxt "model:ir.ui.menu,name:menu_payment_journal_form"
-msgid "Payment Journals"
-msgstr "Libro diario de pago"
+msgid "Journals"
+msgstr "Libros diarios"
 
 msgctxt "model:ir.ui.menu,name:menu_payments"
 msgid "Payments"
@@ -462,6 +518,27 @@ msgstr ""
 
 msgctxt "view:account.configuration:"
 msgid "Payment"
+msgstr ""
+
+msgctxt "view:account.payment.group:"
+msgid "Complete"
+msgstr ""
+
+msgctxt "view:account.payment.group:"
+msgid "Count"
+msgstr ""
+
+#, fuzzy
+msgctxt "view:account.payment.group:"
+msgid "Payments Info"
+msgstr "Libro diario de pago"
+
+msgctxt "view:account.payment.group:"
+msgid "Succeeded"
+msgstr ""
+
+msgctxt "view:account.payment.group:"
+msgid "Total Amount"
 msgstr ""
 
 msgctxt "view:account.payment.process.start:"

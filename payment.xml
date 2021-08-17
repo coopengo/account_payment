@@ -25,10 +25,16 @@ this repository contains the full copyright notices and license terms. -->
             <field name="group" ref="group_payment_approval"/>
         </record>
 
-        <menuitem name="Payments" parent="account.menu_account" sequence="30"
+        <menuitem
+            name="Payments"
+            parent="account.menu_account"
+            sequence="20"
             id="menu_payments"/>
-        <menuitem name="Payments" parent="account.menu_account_configuration"
-            sequence="60" id="menu_payment_configuration"/>
+        <menuitem
+            name="Payments"
+            parent="account.menu_account_configuration"
+            sequence="50"
+            id="menu_payment_configuration"/>
 
         <record model="ir.ui.view" id="payment_journal_view_form">
             <field name="model">account.payment.journal</field>
@@ -42,7 +48,7 @@ this repository contains the full copyright notices and license terms. -->
         </record>
 
         <record model="ir.action.act_window" id="act_payment_journal_form">
-            <field name="name">Payment Journals</field>
+            <field name="name">Journals</field>
             <field name="res_model">account.payment.journal</field>
         </record>
         <record model="ir.action.act_window.view" id="act_payment_journal_form_view1">
@@ -55,19 +61,22 @@ this repository contains the full copyright notices and license terms. -->
             <field name="view" ref="payment_journal_view_form"/>
             <field name="act_window" ref="act_payment_journal_form"/>
         </record>
-        <menuitem parent="menu_payment_configuration" sequence="10"
-            action="act_payment_journal_form" id="menu_payment_journal_form"/>
+        <menuitem
+            parent="menu_payment_configuration"
+            action="act_payment_journal_form"
+            sequence="10"
+            id="menu_payment_journal_form"/>
 
-        <record model="ir.rule.group" id="rule_group_payment_journal">
-            <field name="name">User in company</field>
+        <record model="ir.rule.group" id="rule_group_payment_journal_companies">
+            <field name="name">User in companies</field>
             <field name="model" search="[('model', '=', 'account.payment.journal')]"/>
             <field name="global_p" eval="True"/>
         </record>
-        <record model="ir.rule" id="rule_payment_journal1">
+        <record model="ir.rule" id="rule_payment_journal_companies">
             <field name="domain"
-                eval="[('company', '=', Eval('user', {}).get('company', None))]"
+                eval="[('company', 'in', Eval('companies', []))]"
                 pyson="1"/>
-            <field name="rule_group" ref="rule_group_payment_journal"/>
+            <field name="rule_group" ref="rule_group_payment_journal_companies"/>
         </record>
 
         <record model="ir.model.access" id="access_payment_journal">
@@ -105,7 +114,7 @@ this repository contains the full copyright notices and license terms. -->
             <field name="name">payment_group_list</field>
         </record>
         <record model="ir.action.act_window" id="act_payment_group_form">
-            <field name="name">Payment Groups</field>
+            <field name="name">Groups</field>
             <field name="res_model">account.payment.group</field>
         </record>
         <record model="ir.action.act_window.view"
@@ -120,19 +129,22 @@ this repository contains the full copyright notices and license terms. -->
             <field name="view" ref="payment_group_view_form"/>
             <field name="act_window" ref="act_payment_group_form"/>
         </record>
-        <menuitem parent="menu_payments" action="act_payment_group_form"
-            sequence="30" id="menu_payment_group_form"/>
+        <menuitem
+            parent="menu_payments"
+            action="act_payment_group_form"
+            sequence="30"
+            id="menu_payment_group_form"/>
 
-        <record model="ir.rule.group" id="rule_group_payment_group">
-            <field name="name">User in company</field>
+        <record model="ir.rule.group" id="rule_group_payment_group_companies">
+            <field name="name">User in companies</field>
             <field name="model" search="[('model', '=', 'account.payment.group')]"/>
             <field name="global_p" eval="True"/>
         </record>
-        <record model="ir.rule" id="rule_payment_group1">
+        <record model="ir.rule" id="rule_payment_group_companies">
             <field name="domain"
-                eval="[('company', '=', Eval('user', {}).get('company', None))]"
+                eval="[('company', 'in', Eval('companies', []))]"
                 pyson="1"/>
-            <field name="rule_group" ref="rule_group_payment_group"/>
+            <field name="rule_group" ref="rule_group_payment_group_companies"/>
         </record>
 
         <record model="ir.model.access" id="access_payment_group">
@@ -162,7 +174,6 @@ this repository contains the full copyright notices and license terms. -->
         <record model="ir.sequence.type"
             id="sequence_type_account_payment_group">
             <field name="name">Account Payment Group</field>
-            <field name="code">account.payment.group</field>
         </record>
         <record model="ir.sequence.type-res.group"
             id="sequence_type_account_payment_group_group_admin">
@@ -179,7 +190,7 @@ this repository contains the full copyright notices and license terms. -->
 
         <record model="ir.sequence" id="sequence_account_payment_group">
             <field name="name">Default Account Payment Group</field>
-            <field name="code">account.payment.group</field>
+            <field name="sequence_type" ref="sequence_type_account_payment_group"/>
         </record>
 
         <record model="ir.ui.view" id="payment_view_form">
@@ -248,19 +259,22 @@ this repository contains the full copyright notices and license terms. -->
             <field name="act_window" ref="act_payment_form"/>
         </record>
 
-        <menuitem parent="menu_payments" action="act_payment_form"
-            sequence="20" id="menu_payment_form"/>
+        <menuitem
+            parent="menu_payments"
+            action="act_payment_form"
+            sequence="20"
+            id="menu_payment_form"/>
 
-        <record model="ir.rule.group" id="rule_group_payment">
-            <field name="name">User in company</field>
+        <record model="ir.rule.group" id="rule_group_payment_companies">
+            <field name="name">User in companies</field>
             <field name="model" search="[('model', '=', 'account.payment')]"/>
             <field name="global_p" eval="True"/>
         </record>
-        <record model="ir.rule" id="rule_payment1">
+        <record model="ir.rule" id="rule_payment_companies">
             <field name="domain"
-                eval="[('company', '=', Eval('user', {}).get('company', None))]"
+                eval="[('company', 'in', Eval('companies', []))]"
                 pyson="1"/>
-            <field name="rule_group" ref="rule_group_payment"/>
+            <field name="rule_group" ref="rule_group_payment_companies"/>
         </record>
 
         <record model="ir.action.act_window" id="act_payment_form_line_relate">

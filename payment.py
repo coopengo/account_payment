@@ -1,16 +1,24 @@
 # This file is part of Tryton.  The COPYRIGHT file at the top level of
 # this repository contains the full copyright notices and license terms.
+from collections import defaultdict
+from decimal import Decimal
 from itertools import groupby
 
+from sql.aggregate import Sum, Count
+
 from trytond.i18n import gettext
-from trytond.model import Workflow, ModelView, ModelSQL, fields
+from trytond.model import (
+    Workflow, ModelView, ModelSQL, DeactivableMixin, fields)
 from trytond.model.exceptions import AccessError
 from trytond.pyson import Eval, If
 from trytond.rpc import RPC
+from trytond.tools import reduce_ids, grouped_slice, cursor_dict
 from trytond.transaction import Transaction
+from trytond.tools import sortable_values
 from trytond.wizard import Wizard, StateView, StateAction, Button
 from trytond.pool import Pool
-
+from trytond.modules.company.model import (
+    employee_field, set_employee, reset_employee)
 from .exceptions import OverpayWarning
 
 KINDS = [
@@ -19,7 +27,7 @@ KINDS = [
     ]
 
 
-class Journal(ModelSQL, ModelView):
+class Journal(DeactivableMixin, ModelSQL, ModelView):
     'Payment Journal'
     __name__ = 'account.payment.journal'
     name = fields.Char('Name', required=True)
@@ -52,19 +60,43 @@ class Group(ModelSQL, ModelView):
     __name__ = 'account.payment.group'
     _rec_name = 'number'
     number = fields.Char('Number', required=True, readonly=True)
-    company = fields.Many2One('company.company', 'Company', required=True,
-        readonly=True, select=True, domain=[
-            ('id', If(Eval('context', {}).contains('company'), '=', '!='),
-                Eval('context', {}).get('company', -1)),
-            ])
+    company = fields.Many2One(
+        'company.company', "Company",
+        required=True, readonly=True, select=True)
     journal = fields.Many2One('account.payment.journal', 'Journal',
         required=True, readonly=True, domain=[
             ('company', '=', Eval('company', -1)),
             ],
         depends=['company'])
     kind = fields.Selection(KINDS, 'Kind', required=True, readonly=True)
-    payments = fields.One2Many('account.payment', 'group', 'Payments',
-        readonly=True)
+    payments = fields.One2Many(
+        'account.payment', 'group', 'Payments', readonly=True,
+        domain=[
+            ('company', '=', Eval('company', -1)),
+            ],
+        depends=['company'])
+    currency_digits = fields.Function(fields.Integer("Currency Digits"),
+        'on_change_with_currency_digits')
+    payment_count = fields.Function(fields.Integer(
+            "Payment Count",
+            help="The number of payments in the group."),
+        'get_payment_aggregated')
+    payment_amount = fields.Function(fields.Numeric(
+            "Payment Total Amount",
+            digits=(16, Eval('currency_digits', 2)),
+            depends=['currency_digits'],
+            help="The sum of all payment amounts."),
+        'get_payment_aggregated')
+    payment_amount_succeeded = fields.Function(fields.Numeric(
+            "Payment Succeeded",
+            digits=(16, Eval('currency_digits', 2)),
+            depends=['currency_digits'],
+            help="The sum of the amounts of the successful payments."),
+        'get_payment_aggregated')
+    payment_complete = fields.Function(fields.Boolean(
+            "Payment Complete",
+            help="All the payments in the group are complete."),
+        'get_payment_aggregated', searcher='search_complete')
 
     @classmethod
     def __register__(cls, module_name):
@@ -82,16 +114,16 @@ class Group(ModelSQL, ModelView):
     @classmethod
     def create(cls, vlist):
         pool = Pool()
-        Sequence = pool.get('ir.sequence')
         Config = pool.get('account.configuration')
 
         vlist = [v.copy() for v in vlist]
         config = Config(1)
+        default_company = cls.default_company()
         for values in vlist:
             if values.get('number') is None:
-                values['number'] = Sequence.get_id(
-                    config.payment_group_sequence.id)
-
+                values['number'] = config.get_multivalue(
+                    'payment_group_sequence',
+                    company=values.get('company', default_company)).get()
         return super(Group, cls).create(vlist)
 
     @classmethod
@@ -103,6 +135,100 @@ class Group(ModelSQL, ModelView):
         default.setdefault('payments', None)
         return super(Group, cls).copy(groups, default=default)
 
+    @classmethod
+    def _get_complete_states(cls):
+        return ['succeeded', 'failed']
+
+    @classmethod
+    def get_payment_aggregated(cls, groups, names):
+        pool = Pool()
+        Payment = pool.get('account.payment')
+        cursor = Transaction().connection.cursor()
+
+        payment = Payment.__table__()
+
+        # initialize result and columns
+        result = defaultdict(lambda: defaultdict(lambda: None))
+        columns = [
+            payment.group.as_('group_id'),
+            Count(payment.group).as_('payment_count'),
+            Sum(payment.amount).as_('payment_amount'),
+            Sum(payment.amount,
+                filter_=(payment.state == 'succeeded'),
+                ).as_('payment_amount_succeeded'),
+            Count(payment.group,
+                filter_=(~payment.state.in_(cls._get_complete_states())),
+                ).as_('payment_not_complete'),
+            ]
+
+        for sub_ids in grouped_slice(groups):
+            cursor.execute(*payment.select(*columns,
+                where=reduce_ids(payment.group, sub_ids),
+                group_by=payment.group),
+                )
+
+            for row in cursor_dict(cursor):
+                group_id = row['group_id']
+
+                result['payment_count'][group_id] = row['payment_count']
+                result['payment_complete'][group_id] = \
+                    not row['payment_not_complete']
+
+                amount = row['payment_amount']
+                succeeded = row['payment_amount_succeeded']
+
+                if amount is not None:
+                    # SQLite uses float for SUM
+                    if not isinstance(amount, Decimal):
+                        amount = Decimal(str(amount))
+                    amount = cls(group_id).company.currency.round(amount)
+                result['payment_amount'][group_id] = amount
+
+                if succeeded is not None:
+                    # SQLite uses float for SUM
+                    if not isinstance(succeeded, Decimal):
+                        succeeded = Decimal(str(succeeded))
+                    succeeded = cls(group_id).company.currency.round(succeeded)
+                result['payment_amount_succeeded'][group_id] = succeeded
+
+        for key in list(result.keys()):
+            if key not in names:
+                del result[key]
+
+        return result
+
+    @classmethod
+    def search_complete(cls, name, clause):
+        pool = Pool()
+        Payment = pool.get('account.payment')
+        payment = Payment.__table__()
+
+        query_not_completed = payment.select(payment.group,
+            where=~payment.state.in_(cls._get_complete_states()),
+            group_by=payment.group)
+
+        operators = {
+            '=': 'not in',
+            '!=': 'in',
+            }
+        reverse = {
+            '=': 'in',
+            '!=': 'not in',
+            }
+
+        if clause[1] in operators:
+            if clause[2]:
+                return [('id', operators[clause[1]], query_not_completed)]
+            else:
+                return [('id', reverse[clause[1]], query_not_completed)]
+        else:
+            return []
+
+    @fields.depends('journal')
+    def on_change_with_currency_digits(self, name=None):
+        if self.journal:
+            return self.journal.currency.digits
+
 
 _STATES = {
     'readonly': Eval('state') != 'draft',
@@ -113,12 +239,9 @@ _DEPENDS = ['state']
 class Payment(Workflow, ModelSQL, ModelView):
     'Payment'
     __name__ = 'account.payment'
-    company = fields.Many2One('company.company', 'Company', required=True,
-        select=True, states=_STATES, domain=[
-            ('id', If(Eval('context', {}).contains('company'), '=', '!='),
-                Eval('context', {}).get('company', -1)),
-            ],
-        depends=_DEPENDS)
+    company = fields.Many2One(
+        'company.company', "Company", required=True, select=True,
+        states=_STATES, depends=_DEPENDS)
     journal = fields.Many2One('account.payment.journal', 'Journal',
         required=True, states=_STATES, domain=[
             ('company', '=', Eval('company', -1)),
@@ -131,8 +254,12 @@ class Payment(Workflow, ModelSQL, ModelView):
         'on_change_with_currency_digits')
     kind = fields.Selection(KINDS, 'Kind', required=True,
         states=_STATES, depends=_DEPENDS)
-    party = fields.Many2One('party.party', 'Party', required=True,
-        states=_STATES, depends=_DEPENDS)
+    party = fields.Many2One(
+        'party.party', "Party", required=True, states=_STATES,
+        context={
+            'company': Eval('company', -1),
+            },
+        depends=_DEPENDS + ['company'])
     date = fields.Date('Date', required=True, states=_STATES, depends=_DEPENDS)
     amount = fields.Numeric('Amount', required=True,
         digits=(16, Eval('currency_digits', 2)), states=_STATES,
@@ -184,6 +311,14 @@ class Payment(Workflow, ModelSQL, ModelView):
     process_method = fields.Function(
         fields.Selection('get_process_methods', "Process Method"),
         'on_change_with_process_method', searcher='search_process_method')
+    approved_by = employee_field(
+        "Approved by",
+        states=['approved', 'processing', 'succeeded', 'failed'])
+    succeeded_by = employee_field(
+        "Success Noted by", states=['succeeded', 'processing'])
+    failed_by = employee_field(
+        "Failure Noted by",
+        states=['failed', 'processing'])
     state = fields.Selection([
             ('draft', 'Draft'),
             ('approved', 'Approved'),
@@ -203,7 +338,9 @@ class Payment(Workflow, ModelSQL, ModelView):
                 ('processing', 'failed'),
                 ('approved', 'draft'),
                 ('succeeded', 'failed'),
+                ('succeeded', 'processing'),
                 ('failed', 'succeeded'),
+                ('failed', 'processing'),
                 ))
         cls._buttons.update({
                 'draft': {
@@ -290,11 +427,9 @@ class Payment(Workflow, ModelSQL, ModelView):
     @classmethod
     def get_origin(cls):
         Model = Pool().get('ir.model')
+        get_name = Model.get_name
         models = cls._get_origin()
-        models = Model.search([
-                ('model', 'in', models),
-                ])
-        return [(None, '')] + [(m.model, m.name) for m in models]
+        return [(None, '')] + [(m, get_name(m)) for m in models]
 
     @fields.depends('journal')
     def on_change_with_process_method(self, name=None):
@@ -313,6 +448,18 @@ class Payment(Workflow, ModelSQL, ModelView):
         return Journal.fields_get([field_name])[field_name]['selection']
 
     @classmethod
+    def copy(cls, payments, default=None):
+        if default is None:
+            default = {}
+        else:
+            default = default.copy()
+        default.setdefault('group', None)
+        default.setdefault('approved_by')
+        default.setdefault('succeeded_by')
+        default.setdefault('failed_by')
+        return super().copy(payments, default=default)
+
+    @classmethod
     def delete(cls, payments):
         for payment in payments:
             if payment.state != 'draft':
@@ -324,12 +471,14 @@ class Payment(Workflow, ModelSQL, ModelView):
     @classmethod
     @ModelView.button
     @Workflow.transition('draft')
+    @reset_employee('approved_by', 'succeeded_by', 'failed_by')
     def draft(cls, payments):
         pass
 
     @classmethod
     @ModelView.button
     @Workflow.transition('approved')
+    @set_employee('approved_by')
     def approve(cls, payments):
         pass
 
@@ -343,6 +492,9 @@ class Payment(Workflow, ModelSQL, ModelView):
             cls.write(payments, {
                     'group': group.id,
                     })
+            # Set state before calling process method
+            # as it may set a different state directly
+            cls.proceed(payments)
             process_method = getattr(Group,
                 'process_%s' % group.journal.process_method, None)
             if process_method:
@@ -351,14 +503,21 @@ class Payment(Workflow, ModelSQL, ModelView):
             return group
 
     @classmethod
+    @Workflow.transition('processing')
+    def proceed(cls, payments):
+        assert all(p.group for p in payments)
+
+    @classmethod
     @ModelView.button
     @Workflow.transition('succeeded')
+    @set_employee('succeeded_by')
     def succeed(cls, payments):
         pass
 
     @classmethod
     @ModelView.button
     @Workflow.transition('failed')
+    @set_employee('failed_by')
     def fail(cls, payments):
         pass
 
@@ -390,7 +549,7 @@ class ProcessPayment(Wizard):
         pool = Pool()
         Payment = pool.get('account.payment')
         Warning = pool.get('res.user.warning')
-        payments = Payment.browse(Transaction().context['active_ids'])
+        payments = self.records
 
         for payment in payments:
             if payment.line and payment.line.payment_amount < 0:
@@ -401,7 +560,8 @@ class ProcessPayment(Wizard):
                             line=payment.line.rec_name))
 
         groups = []
-        payments = sorted(payments, key=self._group_payment_key)
+        payments = sorted(
+            payments, key=sortable_values(self._group_payment_key))
         for key, grouped_payments in groupby(payments,
                 key=self._group_payment_key):
             def group():
