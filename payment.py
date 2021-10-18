@@ -192,6 +192,12 @@ class Payment(Workflow, ModelSQL, ModelView):
             ('failed', 'Failed'),
             ], 'State', readonly=True, select=True)
 
+    @property
+    def amount_line_paid(self):
+        if self.state != 'failed':
+            return min(self.amount, self.line.amount)
+        return Decimal(0)
+
     @classmethod
     def __setup__(cls):
         super(Payment, cls).__setup__()
