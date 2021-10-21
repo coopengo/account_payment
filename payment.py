@@ -330,7 +330,11 @@ class Payment(Workflow, ModelSQL, ModelView):
     @property
     def amount_line_paid(self):
         if self.state != 'failed':
-            return min(self.amount, self.line.amount)
+            if self.line.second_currency:
+                payment_amount = abs(self.line.amount_second_currency)
+            else:
+                payment_amount = abs(self.line.credit - self.line.debit)
+            return max(min(self.amount, payment_amount), 0)
         return Decimal(0)
 
     @classmethod
